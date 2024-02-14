@@ -1,0 +1,4 @@
+[
+    { "id": "1", "name": "Kich",  "password": "kich123", "email": "kich@gmail.com", "profiles": ["1", "2", "3"], "active": true, "status": "PENDING" },
+    { "id": "2", "name": "Thana",  "password": "thana123", "email": "thana@gmail.com", "profiles": ["4"], "active": false, "status": "WAITING" }
+]

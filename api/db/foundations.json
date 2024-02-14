@@ -1,0 +1,142 @@
+[
+    { 
+        "id": "1",
+        "foundation": "Toprock", 
+        "moves": [
+            "Indian step",
+            "Two step",
+            "Battle rock",
+            "Charlie rock",
+            "Salsa step",
+            "Jerk rock",
+            "Skater"
+        ] 
+    },
+    { 
+        "id": "2",
+        "foundation": "Footwork", 
+        "moves": [
+            "CC",
+            "Kick outs",
+            "Over/underlap",
+            "Helicopter/coffee grinder",
+            "Two step",
+            "Three step",
+            "Four step",
+            "Five step",
+            "Six step",
+            "Seven step",
+            "Eight step",
+            "Gorilla six step",
+            "Baby love",
+            "Russian step",
+            "Pretzels",
+            "Sweeps/half sweeps",
+            "Peter pan",
+            "Knee rock",
+            "Zulu spin",
+            "Permanent increase",
+            "Knock out"
+        ] 
+    },
+    { 
+        "id": "3",
+        "foundation": "Footwork", 
+        "moves": [
+            "Elbow",
+            "Shoulder",
+            "Handstand",
+            "One handstand",
+            "V-kick",
+            "L-kick",
+            "Headstand",
+            "Baby freeze",
+            "Yoga freeze",
+            "Turtle freeze",
+            "Spider freeze",
+            "Flag freeze",
+            "Scorpion/air baby",
+            "Air chair",
+            "Chair freeze",
+            "Halo freeze",
+            "Sandwich",
+            "Hollow back",
+            "Suicide"
+        ] 
+    },
+    { 
+        "id": "4",
+        "foundation": "Power", 
+        "moves": [
+            "Back spin",
+            "Buttspin",
+            "Windmill",
+            "Tapmill",
+            "Headspin",
+            "Headswipe",
+            "Baby swipe",
+            "Swipe",
+            "Flare",
+            "Air flare",
+            "T-flare",
+            "Airtrack/Starstruck",
+            "Halo",
+            "Shoulder halo",
+            "Babymill",
+            "Tomb stone",
+            "Bellymill",
+            "Shoulderspin",
+            "1990",
+            "2000",
+            "Superman",
+            "Barrelmill",
+            "Elbow track",
+            "Turtles",
+            "Cricket",
+            "Jack hammer",
+            "UFO/floats",
+            "Caveman?",
+            "Critical",
+            "Nutcracker/airplanes",
+            "Headdrill",
+            "Freeze spin"
+        ] 
+    },
+    { 
+        "id": "5",
+        "foundation": "Go downs", 
+        "moves": [
+            "Knee drop",
+            "Hook",
+            "Corkspin drop",
+            "Power step back",
+            "Knee rock",
+            "Coindrop"
+        ] 
+    },
+    { 
+        "id": "6",
+        "foundation": "Tricks", 
+        "moves": [
+            "Vejrmølle",
+            "Ormen",
+            "Macaco",
+            "Kick-up",
+            "Aerial",
+            "Back-flip",
+            "Butterfly",
+            "Butterfly twist",
+            "Koncepter",
+            "Hook",
+            "Foundation begge veje",
+            "Vejskift/shadowrock",
+            "Dynamik/niveauer",
+            "Threads",
+            "Slides",
+            "Origami",
+            "Pass illusion threads",
+            "Grabs & touch",
+            "Buck 4"
+        ] 
+    }
+]
