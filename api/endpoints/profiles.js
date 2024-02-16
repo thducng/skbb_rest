@@ -8,7 +8,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    return res.json(data.find((i) => i.id === req.params.id));
+    const profile = data.find((i) => i.id === req.params.id);
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+    return res.json(profile);
 });
 
 module.exports = router;

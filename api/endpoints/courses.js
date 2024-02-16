@@ -13,6 +13,11 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const course = data.find((i) => i.id === req.params.id)
+
+    if(!course) {
+        return res.json({ error: { message: "Course doesn't exists", body: req.params }});
+    }
+
     const attendants = historyData.filter((i) => i.courseId === course.id);
     return res.json({ ...course, attendants });
 });

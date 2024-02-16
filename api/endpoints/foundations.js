@@ -8,7 +8,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    return res.json(data.find((i) => i.id === req.params.id));
+    const foundation = data.find((i) => i.id === req.params.id);
+    if(!foundation) {
+        return res.json({ error: { message: "Foundation doesn't exists", body: req.params }});
+    }
+    return res.json(foundation);
 });
 
 module.exports = router;

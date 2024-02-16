@@ -16,7 +16,10 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const level = data.find((i) => i.id === req.params.id);
-    const moves = i.foundations.reduce((acc, item) => {
+    if(!level) {
+        return res.json({ error: { message: "Level doesn't exists", body: req.params }});
+    }
+    const moves = level.foundations.reduce((acc, item) => {
         acc += item.moves.length;
         return acc;
     }, 0);
