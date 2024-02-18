@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express();
 
-const data = require('../db/levels.json');
+const Level = require('../models/level.model');
 
-router.get('/', (req, res) => {
-    return res.json(data.map((level) => {
+router.get('/', async (req, res) => {
+    const levels = await Level.find({}).lean();
+
+    return res.json(levels.map((level) => {
         const moves = level.foundations.reduce((acc, item) => {
             acc += item.moves.length;
             return acc;
@@ -14,8 +16,8 @@ router.get('/', (req, res) => {
     }));
 });
 
-router.get('/:id', (req, res) => {
-    const level = data.find((i) => i.id === req.params.id);
+router.get('/:id', async (req, res) => {
+    const level = await Level.findOne({ id: req.params.id }).lean();
     if(!level) {
         return res.json({ error: { message: "Level doesn't exists", body: req.params }});
     }

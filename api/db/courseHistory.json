@@ -1,6 +1,0 @@
-[
-    { "courseId": "1", "profileId": "1", "status": "COMPLETED" },
-    { "courseId": "2", "profileId": "1", "status": "WAITING" },
-    { "courseId": "1", "profileId": "2", "status": "CANCELED" },
-    { "courseId": "1", "profileId": "3", "status": "MISSED" }
-]

@@ -1,29 +1,23 @@
 const express = require('express');
 const router = express();
 
-const data = require('../db/courses.json');
-const historyData = require('../db/courseHistory.json');
+const Course = require('../models/course.model');
+const CourseHistory = require('../models/courseHistory.model');
 
-router.get('/', (req, res) => {
-    return res.json(data.map((course) => {
-        const attendants = historyData.filter((i) => i.courseId === course.id);
-        return { ...course, attendants };
-    }));
+router.get('/', async (req, res) => {
+    const courses = await Course.find({}).lean();
+    return res.json(courses);
 });
 
-router.get('/:id', (req, res) => {
-    const course = data.find((i) => i.id === req.params.id)
+router.get('/:id', async (req, res) => {
+    const course = await Course.findOne({ id: req.params.id }).lean();
 
     if(!course) {
         return res.json({ error: { message: "Course doesn't exists", body: req.params }});
     }
 
-    const attendants = historyData.filter((i) => i.courseId === course.id);
-    return res.json({ ...course, attendants });
-});
-
-router.get('/history/:id', (req, res) => {
-    return res.json(historyData.filter((i) => i.profileId === req.params.id));
+    const history = await CourseHistory.find({ courseId: course.id }).lean();
+    return res.json({ ...course, history });
 });
 
 module.exports = router;

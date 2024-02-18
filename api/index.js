@@ -1,4 +1,5 @@
 const express = require('express');
+require('./mongodb');
 const router = express();
 
 const profiles = require('./endpoints/profiles');
@@ -17,5 +18,7 @@ router.use('/foundations', foundations);
 router.use('/courses', courses);
 router.use('/levels', levels);
 router.use('/events', events);
+
+router.get('/debug', async () => {});
 
 module.exports = router;

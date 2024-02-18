@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express();
 
-const data = require('../db/foundations.json');
+const Foundation = require('../models/foundation.model');
 
-router.get('/', (req, res) => {
-    return res.json(data);
+router.get('/', async (req, res) => {
+    const foundations = await Foundation.find({}).lean();
+    return res.json(foundations);
 });
 
-router.get('/:id', (req, res) => {
-    const foundation = data.find((i) => i.id === req.params.id);
+router.get('/:id', async (req, res) => {
+    const foundation = await Foundation.findOne({ id: req.params.id }).lean();
     if(!foundation) {
         return res.json({ error: { message: "Foundation doesn't exists", body: req.params }});
     }

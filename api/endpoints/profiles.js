@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express();
 
-const data = require('../db/profiles.json');
+const Profile = require('../models/profile.model');
 
-router.get('/', (req, res) => {
-    return res.json(data);
+router.get('/', async (req, res) => {
+    const profiles = await Profile.find({}).lean();
+    return res.json(profiles);
 });
 
-router.get('/:id', (req, res) => {
-    const profile = data.find((i) => i.id === req.params.id);
+router.get('/:id', async (req, res) => {
+    const profile = await Profile.findOne({ id: req.params.id }).lean();
     if(!profile) {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
