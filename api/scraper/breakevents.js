@@ -1,6 +1,8 @@
 const cheerio = require('cheerio');
 const request = require('request');
 const md5 = require('md5');
+const { v4 } = require('uuid');
+const Event = require('../models/event.model');
 
 async function parseList() {
     return new Promise((res, rej) => {
@@ -46,15 +48,17 @@ async function parseItem(item) {
 }
 
 function sanitizeItem(item) {
+    const checksum = md5(JSON.stringify(item));
     return {
-        id: md5(item.url),
+        checksum,
         date: item.date,
         event: item.event,
         url: item.url,
         venue: item.venue,
         country: item.country,
         image: item.image,
-        period: item.period
+        period: item.period,
+        deletedAt: null
     }
 }
 
@@ -69,7 +73,29 @@ async function fetchEvents() {
         return itemsParsed;
     });
 
-    return items;
+    const newEvents = [];
+    const removedEvents = [];
+
+    const existingEvents = await Event.find({ deletedAt: null }).lean();
+    const currentChecksums = items.map((i) => i.checksum);
+    for (let index = 0; index < existingEvents.length; index++) {
+        const event = existingEvents[index];
+        if(!currentChecksums.includes(event.checksum)) {
+            removedEvents.push(event);
+            await Event.updateOne({ id: event.id }, { deletedAt: new Date() });
+        }
+    }
+
+    for (let index = 0; index < items.length; index++) {
+        const item = items[index];
+        const exists = await Event.findOne({ checksum: item.checksum }).lean();
+        if(!exists) {
+            const event = await new Event({ ...item, id: v4() }).save();
+            newEvents.push(event.toObject());
+        }
+    }
+
+    return { events: items.length, added: newEvents.length, removed: removedEvents.length, newEvents, removedEvents };
 }
 
 module.exports = fetchEvents;
