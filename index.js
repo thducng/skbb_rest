@@ -2,11 +2,9 @@ const express = require('express');
 const api = require('./api');
 const app = express();
 const PORT = process.env.PORT || 8080;
+const cors = require('cors');
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-});
+app.use(cors());
 app.use(express.json());
 
 app.use('/api', api);
