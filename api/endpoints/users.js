@@ -38,13 +38,13 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-    const { email, password, name, lastname, zip, city } = req.body;
+    const { email, password, name, lastname, zip, city, terms } = req.body;
     const user = await User.findOne({ email }).lean();
 
     if(user) {
         return res.json({ error: { message: "Email is already in use", body: req.body }});
     }
-    if(!email || !password || !name || !lastname || !zip || !city) {
+    if(!email || !password || !name || !lastname || !zip || !city || !terms) {
         return res.json({ 
             error: { message: "Missing values", 
             body: { 
@@ -54,6 +54,7 @@ router.post('/signup', async (req, res) => {
                 lastname: lastname || 'missing', 
                 zip: zip || 'missing', 
                 city: city || 'missing',
+                terms: terms ? new Date() : 'missing'
             } 
         }});
     }
@@ -68,7 +69,8 @@ router.post('/signup', async (req, res) => {
         city, 
         profiles: [], 
         active: true, 
-        status: "WAITING" 
+        status: "WAITING",
+        terms: new Date()
     }).save();
     return res.json(newUser.toObject());
 });

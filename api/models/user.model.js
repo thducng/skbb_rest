@@ -20,7 +20,8 @@ const schema = new Schema({
     lastname: String,
     profiles: [String], 
     active: Boolean, 
-    status: String 
+    status: String,
+    terms: Date
 }, { timestamps: true });
 
 const Model = mongoose.model('User', schema);
