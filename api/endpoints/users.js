@@ -46,7 +46,7 @@ router.post('/signup', async (req, res) => {
     }
     if(!email || !password || !name || !lastname || !zip || !city) {
         return res.json({ 
-            error: { message: "Missing values is already in use", 
+            error: { message: "Missing values", 
             body: { 
                 email: email || 'missing', 
                 password: password || 'missing', 
