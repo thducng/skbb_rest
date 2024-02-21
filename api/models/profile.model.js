@@ -15,7 +15,14 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    active: Boolean,
     age: Number,
+    crew: String,
+    school: String,
+    image: String,
+
+    prestigeStar: Number,
+    level: Number,
     exp: Number
 }, { timestamps: true });
 
