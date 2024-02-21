@@ -29,15 +29,20 @@ router.post('/:id/addExp', async (req, res) => {
     return res.json(newProfile);
 });
 
-router.post('/:id/updateImage', async (req, res) => {
-    const { id, image } = req.body;
+router.post('/:id/update', async (req, res) => {
+    const { image, crew, school, name, age } = req.body;
     const profile = await Profile.findOne({ id: req.params.id });
 
     if(!profile) {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
-    profile.image = id;
+    profile.image = image || profile.image;
+    profile.crew = crew || profile.crew;
+    profile.school = school || profile.school;
+    profile.name = name || profile.name;
+    profile.age = age || profile.age;
+
     const newProfile = await profile.save();
     return res.json(newProfile);
 });
