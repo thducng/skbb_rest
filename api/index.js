@@ -9,6 +9,7 @@ const foundations = require('./endpoints/foundations');
 const courses = require('./endpoints/courses');
 const levels = require('./endpoints/levels');
 const events = require('./endpoints/events');
+const videos = require('./endpoints/videos');
 
 
 router.get('/', (req, res) => {
@@ -20,6 +21,7 @@ router.use('/foundations', foundations);
 router.use('/courses', courses);
 router.use('/levels', levels);
 router.use('/events', events);
+router.use('/videos', videos);
 
 router.use('/images', (req, res) => {
     fs.readdir('images', (err, files) => {
