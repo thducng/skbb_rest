@@ -5,8 +5,7 @@ const schema = new Schema({
     id: String,
     profileId: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     filename: {
         type: String,
