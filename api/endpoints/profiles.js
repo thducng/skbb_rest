@@ -3,6 +3,7 @@ const { addExp } = require('../lib/level');
 const router = express();
 
 const Profile = require('../models/profile.model');
+const File = require('../models/file.model');
 
 router.get('/', async (req, res) => {
     const profiles = await Profile.find({}).lean();
@@ -15,6 +16,11 @@ router.get('/:id', async (req, res) => {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
     return res.json(profile);
+});
+
+router.get('/:id/files', async (req, res) => {
+    const files = await File.find({ profileId: req.params.id }).lean();
+    return res.json(files);
 });
 
 router.post('/:id/addExp', async (req, res) => {

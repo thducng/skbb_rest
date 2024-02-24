@@ -3,6 +3,7 @@ const { Readable } = require("stream");
 const mongoose = require('mongoose');
 const Grid = require('gridfs-stream');
 const File = require('../models/file.model');
+const Profile = require('../models/profile.model');
 
 const router = express();
 const multer = require('multer');
@@ -45,8 +46,9 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             return res.status(400).json({ error: 'No file provided in the request' });
         }
 
-        if (!req.body.profileId) {
-            return res.status(400).json({ error: 'No profile id provided in the request' });
+        const profile = await Profile.findOne({ id: req.body.profileId }).lean();
+        if (!profile) {
+            return res.status(400).json({ error: 'Profile does not exists' });
         }
         
         let { file, body } =  req
