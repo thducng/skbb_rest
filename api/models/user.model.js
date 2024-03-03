@@ -22,7 +22,9 @@ const schema = new Schema({
     active: Boolean, 
     status: String,
     terms: Date,
-    type: String
+    type: String,
+
+    deletedAt: Date
 }, { timestamps: true });
 
 const Model = mongoose.model('User', schema);

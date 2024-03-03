@@ -24,7 +24,9 @@ const schema = new Schema({
 
     prestigeStar: Number,
     level: Number,
-    exp: Number
+    exp: Number,
+
+    deletedAt: Date
 }, { timestamps: true });
 
 const Model = mongoose.model('Profile', schema);

@@ -12,7 +12,7 @@ const validUserTypes = [
 
 router.get('/', async (req, res) => {
     const users = await User.find({}).lean();
-    const profiles = await Profile.find({ userId: { $in: users.map((i) => i.id) }}).lean()
+    const profiles = await Profile.find({ userId: { $in: users.map((i) => i.id) }, deletedAt: null }).lean()
 
     return res.json(users.map((user) => {
         return { ...user, profiles: user.profiles.map((id) => profiles.find((i) => i.id === id))};
@@ -26,8 +26,23 @@ router.get('/:id', async (req, res) => {
         return res.json({ error: { message: "User doesn't exists", body: req.body }});
     }
 
-    const profiles = await Profile.find({ userId: req.params.id }).lean();
+    const profiles = await Profile.find({ userId: req.params.id, deletedAt: null }).lean();
     return res.json({ ...user, profiles });
+});
+
+router.get('/:id/delete', async (req, res) => {
+    // Check on admin user
+    const user = await User.findOne({ id: req.params.id });
+
+    if(!user) {
+        return res.json({ error: { message: "User doesn't exists", body: req.body }});
+    }
+
+    await Profile.updateMany({ userId: req.params.id, deletedAt: null }, { deletedAt: new Date() }).lean();
+    user.deletedAt = new Date();
+    const newUser = await user.save();
+    const profiles = await Profile.find({ userId: req.params.id }).lean();
+    return res.json({ ...newUser.toObject(), profiles });
 });
 
 router.post('/:id', async (req, res) => {
