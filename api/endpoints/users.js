@@ -70,6 +70,7 @@ router.post('/:id', async (req, res) => {
     user.city = city || user.city;
     user.terms = terms || user.terms;
     user.type = type || user.type;
+    user.deletedAt = null;
 
     const newUser = await user.save();
     return res.json(newUser);

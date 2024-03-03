@@ -69,6 +69,7 @@ router.post('/:id/update', async (req, res) => {
     profile.school = school || profile.school;
     profile.name = name || profile.name;
     profile.age = age || profile.age;
+    profile.deletedAt = null;
 
     if(type) {
         if(!validProfileTypes.includes(type)) {
