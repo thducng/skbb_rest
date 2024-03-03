@@ -15,6 +15,7 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    type: String,
     active: Boolean,
     age: Number,
     crew: String,

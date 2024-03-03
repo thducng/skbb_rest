@@ -5,6 +5,11 @@ const router = express();
 const Profile = require('../models/profile.model');
 const User = require('../models/user.model');
 
+const validUserTypes = [
+    'USER',
+    'ADMIN'
+];
+
 router.get('/', async (req, res) => {
     const users = await User.find({}).lean();
     const profiles = await Profile.find({ userId: { $in: users.map((i) => i.id) }}).lean()
@@ -25,9 +30,39 @@ router.get('/:id', async (req, res) => {
     return res.json({ ...user, profiles });
 });
 
+router.post('/:id', async (req, res) => {
+    const { email, password, name, lastname, zip, city, terms, type } = req.body;
+    const user = await User.findOne({ id: req.params.id });
+
+    if(!user) {
+        return res.json({ error: { message: "User doesn't exists", body: req.body }});
+    }
+
+    if(type && !validUserTypes.includes(type)) {
+        return res.json({ error: { message: "Invalid user type", body: req.body }});
+    }
+
+    const exists = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
+    if(exists && user.email !== email) {
+        return res.json({ error: { message: "Email is already in use", body: req.body }});
+    }
+
+    user.email = email || user.email;
+    user.password = password || user.password;
+    user.name = name || user.name;
+    user.lastname = lastname || user.lastname;
+    user.zip = zip || user.zip;
+    user.city = city || user.city;
+    user.terms = terms || user.terms;
+    user.type = type || user.type;
+
+    const newUser = await user.save();
+    return res.json(newUser);
+});
+
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password }).lean();
+    const user = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' }, password }).lean();
 
     if(!user) {
         return res.json({ error: { message: "User doesn't exists", body: req.body }});
@@ -38,13 +73,16 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-    const { email, password, name, lastname, zip, city, terms } = req.body;
-    const user = await User.findOne({ email }).lean();
+    const { email, password, name, lastname, zip, city, terms, type } = req.body;
+    const user = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
 
     if(user) {
         return res.json({ error: { message: "Email is already in use", body: req.body }});
     }
-    if(!email || !password || !name || !lastname || !zip || !city || !terms) {
+    if(type && !validUserTypes.includes(type)) {
+        return res.json({ error: { message: "Invalid user type", body: req.body }});
+    }
+    if(!email || !password || !name || !lastname || !zip || !city || !terms || !type) {
         return res.json({ 
             error: { message: "Missing values", 
             body: { 
@@ -54,6 +92,7 @@ router.post('/signup', async (req, res) => {
                 lastname: lastname || 'missing', 
                 zip: zip || 'missing', 
                 city: city || 'missing',
+                type: type || 'missing',
                 terms: terms ? new Date() : 'missing'
             } 
         }});
@@ -66,7 +105,8 @@ router.post('/signup', async (req, res) => {
         name, 
         lastname, 
         zip, 
-        city, 
+        city,
+        type,
         profiles: [], 
         active: true, 
         status: "WAITING",
@@ -76,20 +116,21 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/:id/createProfile', async (req, res) => {
-    const { userId, name, age, crew, school, image } = req.body;
+    const { userId, name, age, crew, school, image, type } = req.body;
     const profile = await Profile.findOne({ userId, name }).lean();
 
     if(profile) {
         return res.json({ error: { message: "Name is already in use", body: req.body }});
     }
-    if(!userId || !name || !age || !image) {
+    if(!userId || !name || !age || !image || !type) {
         return res.json({ 
             error: { message: "Missing values", 
-            body: { 
+            body: {
                 userId: userId || 'missing', 
                 name: name || 'missing', 
                 age: age || 'missing', 
-                image: image || 'missing'
+                image: image || 'missing',
+                type: type || 'missing'
             } 
         }});
     }
@@ -99,7 +140,8 @@ router.post('/:id/createProfile', async (req, res) => {
         userId, 
         name, 
         age, 
-        crew, 
+        crew,
+        type,
         school, 
         image,
         active: true

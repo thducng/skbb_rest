@@ -5,6 +5,14 @@ const router = express();
 const Profile = require('../models/profile.model');
 const File = require('../models/file.model');
 
+const validProfileTypes = [
+    'GUEST',
+    'BREAKER',
+    'INSTRUCTOR',
+    'STUDENT',
+    'ADMIN'
+]
+
 router.get('/', async (req, res) => {
     const profiles = await Profile.find({}).lean();
     return res.json(profiles);
@@ -36,7 +44,7 @@ router.post('/:id/addExp', async (req, res) => {
 });
 
 router.post('/:id/update', async (req, res) => {
-    const { image, crew, school, name, age } = req.body;
+    const { image, crew, school, type, name, age } = req.body;
     const profile = await Profile.findOne({ id: req.params.id });
 
     if(!profile) {
@@ -48,6 +56,13 @@ router.post('/:id/update', async (req, res) => {
     profile.school = school || profile.school;
     profile.name = name || profile.name;
     profile.age = age || profile.age;
+
+    if(type) {
+        if(!validProfileTypes.includes(type)) {
+            return res.json({ error: { message: "Invalid profile type", body: req.params }});
+        }
+        profile.type = type || profile.type;
+    }
 
     const newProfile = await profile.save();
     return res.json(newProfile);
