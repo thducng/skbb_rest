@@ -80,6 +80,8 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email, password }).lean();
 
+    console.log(email, password, user);
+
     if(!user) {
         return res.json({ error: { message: "User doesn't exists", body: req.body }});
     }
