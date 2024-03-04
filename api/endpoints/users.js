@@ -57,7 +57,7 @@ router.post('/:id', async (req, res) => {
         return res.json({ error: { message: "Invalid user type", body: req.body }});
     }
 
-    const exists = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
+    const exists = await User.findOne({ email: { $regex: new RegExp(email).source, $options: 'i' } }).lean();
     if(exists && user.email !== email) {
         return res.json({ error: { message: "Email is already in use", body: req.body }});
     }
@@ -78,7 +78,7 @@ router.post('/:id', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' }, password }).lean();
+    const user = await User.findOne({ email: { $regex: new RegExp(email).source, $options: 'i' }, password }).lean();
 
     if(!user) {
         return res.json({ error: { message: "User doesn't exists", body: req.body }});
@@ -90,7 +90,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/signup', async (req, res) => {
     const { email, password, name, lastname, zip, city, terms, type } = req.body;
-    const user = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
+    const user = await User.findOne({ email: { $regex: new RegExp(email).source, $options: 'i' } }).lean();
 
     if(user) {
         return res.json({ error: { message: "Email is already in use", body: req.body }});
