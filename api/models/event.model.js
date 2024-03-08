@@ -15,6 +15,7 @@ const schema = new Schema({
     country: String,
     image: String,
     period: String,
+    source: String,
     deletedAt: Date
 }, { timestamps: true });
 
