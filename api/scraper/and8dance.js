@@ -4,6 +4,8 @@ const md5 = require('md5');
 const { v4 } = require('uuid');
 const Event = require('../models/event.model');
 
+const source = "and8dance";
+
 async function parseList() {
     return new Promise((res, rej) => {
         request('https://and8.dance/en/events', function (error, response, body) {
@@ -58,11 +60,12 @@ function sanitizeItem(item) {
         country: item.country,
         image: item.image,
         period: item.period,
+        source,
         deletedAt: null
     }
 }
 
-async function fetchEvents() {
+async function scrape() {
     const items = await parseList().then(async (items) => {
         const itemsParsed = [];
         for (let index = 0; index < items.length; index++) {
@@ -98,4 +101,4 @@ async function fetchEvents() {
     return { events: items.length, added: newEvents.length, removed: removedEvents.length, newEvents, removedEvents };
 }
 
-module.exports = fetchEvents;
+module.exports = { source, scrape };
