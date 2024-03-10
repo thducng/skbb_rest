@@ -39,6 +39,11 @@ router.post('/:id/addExp', async (req, res) => {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
+    if(!exp) {
+        return res.json({ error: { message: "Missing exp", body: req.params }});
+    }
+
+
     const newProfile = await addExp(profile, exp);
     return res.json(newProfile);
 });
