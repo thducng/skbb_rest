@@ -5,12 +5,17 @@ const scrape = require('../scraper');
 const Event = require('../models/event.model');
 const { v4 } = require('uuid');
 
+const validStatus = [
+    'PENDING',
+    'APPORVED'
+]
+
 router.get('/', async (req, res) => {
     return res.json(await Event.find().lean());
 });
 
 router.post('/', async (req, res) => {
-    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags } = req.body;
+    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, address, week } = req.body;
     
     const newEvent = {
         id: v4(),
@@ -73,9 +78,15 @@ router.post('/:id/update', async (req, res) => {
     existingEvent.city = city || existingEvent.city;
     existingEvent.tags = tags || existingEvent.tags;
     existingEvent.week = week || existingEvent.week;
-    existingEvent.status = status || existingEvent.status;
     existingEvent.deletedAt = null;
 
+    if(status) {
+        if(!validStatus.includes(status)) {
+            return res.json({ error: { message: "Invalid event status", body: req.params }});
+        }
+        existingEvent.status = status || existingEvent.status;
+    }
+    
     existingEvent.checksum = md5(JSON.stringify(existingEvent.toObject()));
     await existingEvent.save();
 
