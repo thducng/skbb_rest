@@ -11,15 +11,23 @@ async function scrape(source) {
 
         if(source) {
             if(scraper.source === source) {
-                const result = await scraper.scrape(scraper.slug);
-                data.push(result);
+                try{
+                    const result = await scraper.scrape(scraper.slug);
+                    data.push(result);
+                } catch(err) {
+                    console.log(err);
+                }
             } else {
                 continue;
             }
         }
 
-        const result = await scraper.scrape(scraper.slug);
-        data.push(result);
+        try{
+            const result = await scraper.scrape(scraper.slug);
+            data.push(result);
+        } catch(err) {
+            console.log(err);
+        }
     }
 
     return data;

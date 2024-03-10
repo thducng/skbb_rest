@@ -3,35 +3,36 @@ const request = require('request');
 const md5 = require('md5');
 const { v4 } = require('uuid');
 const Event = require('../models/event.model');
+const puppeteer = require('./puppeteer');
 
 const source = "bboybattles";
 
 async function parseList() {
-    return new Promise((res, rej) => {
-        request('https://www.bboybattles.org/battles.aspx', function (error, response, body) {
-            const $ = cheerio.load(body);
+    const html = await puppeteer.getHtml('https://www.bboybattles.org/battles.aspx', '.BattleList_Table');
+    const $ = cheerio.load(html);
 
-            const items = [];
-            $('.BattleList_Table div').each((idx, e) => {
-                const item = {};
-                $(e).find('.BattleList_Item > span').each((idx, element) => {
-                    if(idx === 0){
-                        item['date'] = $(element).text().trim();
-                        item['period'] = $(element).text().trim();
-                    } else if(idx === 1) {
-                        item['event'] = $(element).find('a').text().trim();
-                        item['url'] = $(element).find('a').attr('href');
-                    } else if(idx === 2) {
-                        item['country'] = $(element).text().trim();
-                    }
-                });
+    const items = [];
+    $('.BattleList_Table .Row').each((idx, e) => {
+        const item = {};
+        $(e).find('.BattleList_Item').each((idx, element) => {
+            if(idx === 0){
+                item['date'] = $(element).text().trim();
+                item['period'] = $(element).text().trim();
+            } else if(idx === 1) {
+                item['event'] = $(element).find('a').text().trim();
+                item['url'] = $(element).find('a').attr('href');
+            } else if(idx === 2) {
+                item['country'] = $(element).text().trim();
+            }
+        });
 
-                items.push(item);
-            });
-
-            res(items);
-        })
+        if(item.url) {
+            items.push(item);
+        }
     });
+
+    
+    return items;
 }
 
 // async function parseItem(item) {
@@ -80,24 +81,24 @@ async function scrape() {
     const newEvents = [];
     const removedEvents = [];
 
-    const existingEvents = await Event.find({ deletedAt: null }).lean();
+    const existingEvents = await Event.find({ deletedAt: null, source }).lean();
     const currentChecksums = items.map((i) => i.checksum);
-    // for (let index = 0; index < existingEvents.length; index++) {
-    //     const event = existingEvents[index];
-    //     if(!currentChecksums.includes(event.checksum)) {
-    //         removedEvents.push(event);
-    //         await Event.updateOne({ id: event.id }, { deletedAt: new Date() });
-    //     }
-    // }
+    for (let index = 0; index < existingEvents.length; index++) {
+        const event = existingEvents[index];
+        if(!currentChecksums.includes(event.checksum)) {
+            removedEvents.push(event);
+            await Event.updateOne({ id: event.id }, { deletedAt: new Date() });
+        }
+    }
 
-    // for (let index = 0; index < items.length; index++) {
-    //     const item = items[index];
-    //     const exists = await Event.findOne({ checksum: item.checksum }).lean();
-    //     if(!exists) {
-    //         const event = await new Event({ ...item, id: v4() }).save();
-    //         newEvents.push(event.toObject());
-    //     }
-    // }
+    for (let index = 0; index < items.length; index++) {
+        const item = items[index];
+        const exists = await Event.findOne({ checksum: item.checksum }).lean();
+        if(!exists) {
+            const event = await new Event({ ...item, id: v4() }).save();
+            newEvents.push(event.toObject());
+        }
+    }
 
     return { events: items.length, added: newEvents.length, removed: removedEvents.length, newEvents, removedEvents };
 }
