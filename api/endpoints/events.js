@@ -29,6 +29,7 @@ router.post('/', async (req, res) => {
         zip,
         city,
         tags,
+        status: 'PENDING',
         week
     }
     event.checksum = md5(JSON.stringify(newEvent));
@@ -48,7 +49,7 @@ router.get('/scrape/:source', async (req, res) => {
 
 
 router.post('/:id/update', async (req, res) => {
-    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags } = req.body;
+    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, status } = req.body;
     
     const existingEvent = await Event.findOne({ id: req.params.id });
 
@@ -72,6 +73,7 @@ router.post('/:id/update', async (req, res) => {
     existingEvent.city = city || existingEvent.city;
     existingEvent.tags = tags || existingEvent.tags;
     existingEvent.week = week || existingEvent.week;
+    existingEvent.status = status || existingEvent.status;
     existingEvent.deletedAt = null;
 
     existingEvent.checksum = md5(JSON.stringify(existingEvent.toObject()));

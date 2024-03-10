@@ -17,6 +17,7 @@ const schema = new Schema({
     period: String,
     source: String,
     deletedAt: Date,
+    status: String,
 
     address: String,
     facebook: String,
