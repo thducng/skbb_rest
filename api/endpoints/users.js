@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
     return res.json({ ...user, profiles });
 });
 
-router.get('/:id/delete', async (req, res) => {
+router.post('/:id/delete', async (req, res) => {
     // Check on admin user
     const user = await User.findOne({ id: req.params.id });
 
