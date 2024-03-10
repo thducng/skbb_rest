@@ -16,7 +16,16 @@ const schema = new Schema({
     image: String,
     period: String,
     source: String,
-    deletedAt: Date
+    deletedAt: Date,
+
+    address: String,
+    facebook: String,
+    instagram: String,
+    googlemaps: String,
+    zip: String,
+    city: String,
+    tags: [String],
+    week: Number,
 }, { timestamps: true });
 
 const Model = mongoose.model('event', schema);
