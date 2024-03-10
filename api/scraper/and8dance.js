@@ -3,7 +3,6 @@ const request = require('request');
 const md5 = require('md5');
 const { v4 } = require('uuid');
 const Event = require('../models/event.model');
-
 const source = "and8dance";
 
 async function parseList() {
@@ -67,6 +66,7 @@ function sanitizeItem(item) {
 }
 
 async function scrape() {
+    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
     const items = await parseList().then(async (items) => {
         const itemsParsed = [];
         for (let index = 0; index < items.length; index++) {
@@ -99,6 +99,8 @@ async function scrape() {
         }
     }
 
+
+    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
     return { events: items.length, added: newEvents.length, removed: removedEvents.length, newEvents, removedEvents };
 }
 
