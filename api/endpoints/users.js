@@ -101,19 +101,19 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/:id/createProfile', async (req, res) => {
-    const { userId, name, age, crew, school, image, type } = req.body;
+    const { userId, name, birthday, crew, school, image, type } = req.body;
     const profile = await Profile.findOne({ userId, name }).lean();
 
     if(profile) {
         return res.json({ error: { message: "Name is already in use", body: req.body }});
     }
-    if(!userId || !name || !age || !image || !type) {
+    if(!userId || !name || !birthday || !image || !type) {
         return res.json({ 
             error: { message: "Missing values", 
             body: {
                 userId: userId || 'missing', 
                 name: name || 'missing', 
-                age: age || 'missing', 
+                birthday: birthday || 'missing', 
                 image: image || 'missing',
                 type: type || 'missing'
             } 
@@ -124,7 +124,7 @@ router.post('/:id/createProfile', async (req, res) => {
         id: v4(),
         userId, 
         name, 
-        age, 
+        birthday, 
         crew,
         type,
         school, 

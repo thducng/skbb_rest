@@ -17,7 +17,7 @@ const schema = new Schema({
     },
     type: String,
     active: Boolean,
-    age: Number,
+    birthday: String,
     crew: String,
     school: String,
     image: String,

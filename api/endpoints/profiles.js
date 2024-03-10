@@ -57,7 +57,7 @@ router.get('/:id/delete', async (req, res) => {
 });
 
 router.post('/:id/update', async (req, res) => {
-    const { image, crew, school, type, name, age } = req.body;
+    const { image, crew, school, type, name, birthday } = req.body;
     const profile = await Profile.findOne({ id: req.params.id });
 
     if(!profile) {
@@ -68,7 +68,7 @@ router.post('/:id/update', async (req, res) => {
     profile.crew = crew || profile.crew;
     profile.school = school || profile.school;
     profile.name = name || profile.name;
-    profile.age = age || profile.age;
+    profile.birthday = birthday || profile.birthday;
     profile.deletedAt = null;
 
     if(type) {
