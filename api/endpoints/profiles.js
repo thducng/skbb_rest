@@ -48,7 +48,7 @@ router.post('/:id/addExp', async (req, res) => {
     return res.json(newProfile);
 });
 
-router.get('/:id/delete', async (req, res) => {
+router.post('/:id/delete', async (req, res) => {
     // Check on admin user or actual user id
     const profile = await Profile.findOne({ id: req.params.id });
 
