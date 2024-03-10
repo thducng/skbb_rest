@@ -61,6 +61,7 @@ function sanitizeItem(item) {
         image: item.image,
         period: item.period,
         source,
+        status: 'PENDING',
         deletedAt: null
     }
 }
