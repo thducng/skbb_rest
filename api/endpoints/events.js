@@ -53,9 +53,22 @@ router.get('/scrape/:source', async (req, res) => {
     return res.json(await scrape(req.params.source));
 });
 
+router.post('/:id/delete', async (req, res) => {
+    // Check on admin user or actual user id
+    const existingEvent = await Event.findOne({ id: req.params.id });
+
+    if(!existingEvent) {
+        return res.json({ error: { message: "Event doesn't exists", body: req.params }});
+    }
+
+    existingEvent.deletedAt = new Date();
+    const newEvent = await existingEvent.save();
+    return res.json(newEvent.toObject());
+});
+
 
 router.post('/:id/update', async (req, res) => {
-    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, status } = req.body;
+    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, status, address } = req.body;
     
     const existingEvent = await Event.findOne({ id: req.params.id });
 
