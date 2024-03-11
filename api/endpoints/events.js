@@ -9,7 +9,8 @@ const { sanitizeValue } = require('../lib/sanitizeValue');
 
 const validStatus = [
     'PENDING',
-    'APPROVED'
+    'APPROVED',
+    'REJECTED',
 ]
 
 router.get('/', async (req, res) => {
