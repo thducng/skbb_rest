@@ -68,7 +68,7 @@ router.post('/:id/delete', async (req, res) => {
 
 
 router.post('/:id/update', async (req, res) => {
-    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, status, address } = req.body;
+    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, status, address, week } = req.body;
     
     const existingEvent = await Event.findOne({ id: req.params.id });
 
