@@ -135,7 +135,7 @@ router.post('/:id/createProfile', async (req, res) => {
 });
 
 router.post('/:id', async (req, res) => {
-    const { email, password, name, lastname, zip, city, terms, type } = req.body;
+    const { email, type } = req.body;
     const user = await User.findOne({ id: req.params.id });
 
     if(!user) {
@@ -151,14 +151,11 @@ router.post('/:id', async (req, res) => {
         return res.json({ error: { message: "Email is already in use", body: req.body }});
     }
 
-    user.email = email !== null ? email : user.email;
-    user.password = password !== null ? password : user.password;
-    user.name = name !== null ? name : user.name;
-    user.lastname = lastname !== null ? lastname : user.lastname;
-    user.zip = zip !== null ? zip : user.zip;
-    user.city = city !== null ? city : user.city;
-    user.terms = terms !== null ? terms : user.terms;
-    user.type = type !== null ? type : user.type;
+    const keys = [ "email", "password", "name", "lastname", "zip", "city", "terms", "type" ];
+    for (let idx = 0; idx < keys.length; idx++) {
+        const key = keys[idx];
+        user[key] = sanitizeValue(req.body[key], user[key]);
+    }
     user.deletedAt = null;
 
     const newUser = await user.save();

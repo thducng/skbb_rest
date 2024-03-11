@@ -5,6 +5,7 @@ const md5 = require('md5');
 const scrape = require('../scraper');
 const Event = require('../models/event.model');
 const { v4 } = require('uuid');
+const { sanitizeValue } = require('../lib/sanitizeValue');
 
 const validStatus = [
     'PENDING',
@@ -15,9 +16,23 @@ router.get('/', async (req, res) => {
     return res.json(await Event.find().lean());
 });
 
+router.get('/:id', async (req, res) => {
+    return res.json(await Event.findOne({ id: req.params.id }).lean());
+});
+
 router.post('/', async (req, res) => {
     const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, address, week } = req.body;
     
+    if(!date || !event) {
+        return res.json({ 
+            error: { message: "Missing values", 
+            body: { 
+                date: date || 'missing', 
+                event: event || 'missing'
+            } 
+        }});
+    }
+
     const newEvent = {
         id: v4(),
         date, 
@@ -68,37 +83,25 @@ router.post('/:id/delete', async (req, res) => {
 
 
 router.post('/:id/update', async (req, res) => {
-    const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, status, address, week } = req.body;
-    
     const existingEvent = await Event.findOne({ id: req.params.id });
 
     if(!existingEvent) {
         return res.json({ error: { message: "Event doesn't exists", body: req.params }});
     }
 
-    existingEvent.date = date !== null ? date : existingEvent.date;
-    existingEvent.event = event !== null ? event : existingEvent.event;
-    existingEvent.url = url !== null ? url : existingEvent.url;
-    existingEvent.venue = venue !== null ? venue : existingEvent.venue;
-    existingEvent.country = country !== null ? country : existingEvent.country;
-    existingEvent.image = image !== null ? image : existingEvent.image;
-    existingEvent.period = period !== null ? period : existingEvent.period;
-    existingEvent.source = source !== null ? source : existingEvent.source;
-    existingEvent.address = address !== null ? address : existingEvent.address;
-    existingEvent.facebook = facebook !== null ? facebook : existingEvent.facebook;
-    existingEvent.instagram = instagram !== null ? instagram : existingEvent.instagram;
-    existingEvent.googlemaps = googlemaps !== null ? googlemaps : existingEvent.googlemaps;
-    existingEvent.zip = zip !== null ? zip : existingEvent.zip;
-    existingEvent.city = city !== null ? city : existingEvent.city;
-    existingEvent.tags = tags !== null ? tags : existingEvent.tags;
-    existingEvent.week = week !== null ? week : existingEvent.week;
+    const keys = ["date", "event", "url", "venue", "country", "image", "period", "source", "facebook", "instagram", "googlemaps", "zip", "city", "tags", "address", "week"];
+
+    for (let idx = 0; idx < keys.length; idx++) {
+        const key = keys[idx];
+        existingEvent[key] = sanitizeValue(req.body[key], existingEvent[key]);
+    }
     existingEvent.deletedAt = null;
 
-    if(status) {
-        if(!validStatus.includes(status)) {
+    if(req.body.status) {
+        if(!validStatus.includes(req.body.status)) {
             return res.json({ error: { message: "Invalid event status", body: req.params }});
         }
-        existingEvent.status = status || existingEvent.status;
+        existingEvent.status = req.body.status || existingEvent.status;
     }
     
     existingEvent.checksum = md5(JSON.stringify(existingEvent.toObject()));

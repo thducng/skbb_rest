@@ -62,18 +62,18 @@ router.post('/:id/delete', async (req, res) => {
 });
 
 router.post('/:id/update', async (req, res) => {
-    const { image, crew, school, type, name, birthday } = req.body;
+    const { type } = req.body;
     const profile = await Profile.findOne({ id: req.params.id });
 
     if(!profile) {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
-    profile.image = image !== null ? image : profile.image;
-    profile.crew = crew !== null ? crew : profile.crew;
-    profile.school = school !== null ? school : profile.school;
-    profile.name = name !== null ? name : profile.name;
-    profile.birthday = birthday !== null ? birthday : profile.birthday;
+    const keys = [ "image", "crew", "school", "type", "name", "birthday"];
+    for (let idx = 0; idx < keys.length; idx++) {
+        const key = keys[idx];
+        profile[key] = sanitizeValue(req.body[key], profile[key]);
+    }
     profile.deletedAt = null;
 
     if(type) {
