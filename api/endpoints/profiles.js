@@ -69,11 +69,11 @@ router.post('/:id/update', async (req, res) => {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
-    profile.image = image || profile.image;
-    profile.crew = crew || profile.crew;
-    profile.school = school || profile.school;
-    profile.name = name || profile.name;
-    profile.birthday = birthday || profile.birthday;
+    profile.image = image !== null ? image : profile.image;
+    profile.crew = crew !== null ? crew : profile.crew;
+    profile.school = school !== null ? school : profile.school;
+    profile.name = name !== null ? name : profile.name;
+    profile.birthday = birthday !== null ? birthday : profile.birthday;
     profile.deletedAt = null;
 
     if(type) {

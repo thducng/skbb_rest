@@ -151,14 +151,14 @@ router.post('/:id', async (req, res) => {
         return res.json({ error: { message: "Email is already in use", body: req.body }});
     }
 
-    user.email = email || user.email;
-    user.password = password || user.password;
-    user.name = name || user.name;
-    user.lastname = lastname || user.lastname;
-    user.zip = zip || user.zip;
-    user.city = city || user.city;
-    user.terms = terms || user.terms;
-    user.type = type || user.type;
+    user.email = email !== null ? email : user.email;
+    user.password = password !== null ? password : user.password;
+    user.name = name !== null ? name : user.name;
+    user.lastname = lastname !== null ? lastname : user.lastname;
+    user.zip = zip !== null ? zip : user.zip;
+    user.city = city !== null ? city : user.city;
+    user.terms = terms !== null ? terms : user.terms;
+    user.type = type !== null ? type : user.type;
     user.deletedAt = null;
 
     const newUser = await user.save();
