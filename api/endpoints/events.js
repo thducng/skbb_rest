@@ -8,7 +8,7 @@ const { v4 } = require('uuid');
 
 const validStatus = [
     'PENDING',
-    'APPORVED'
+    'APPROVED'
 ]
 
 router.get('/', async (req, res) => {
