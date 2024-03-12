@@ -1,5 +1,6 @@
 const express = require('express');
 const { addExp } = require('../lib/level');
+const { sanitizeValue } = require('../lib/sanitizeValue');
 const router = express();
 
 const Profile = require('../models/profile.model');

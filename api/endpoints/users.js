@@ -1,5 +1,6 @@
 const express = require('express');
 const { v4 } = require('uuid');
+const { sanitizeValue } = require('../lib/sanitizeValue');
 const router = express();
 
 const Profile = require('../models/profile.model');
