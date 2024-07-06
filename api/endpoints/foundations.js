@@ -2,6 +2,7 @@ const express = require('express');
 const router = express();
 
 const Foundation = require('../models/foundation.model');
+const Combo = require('../models/combo.model');
 
 /**
  * GET /api/foundations
@@ -27,7 +28,30 @@ router.get('/:id', async (req, res) => {
     if(!foundation) {
         return res.json({ error: { message: "Foundation doesn't exists", body: req.params }});
     }
-    return res.json(foundation);
+
+    const combos = await Combo.find({ foundations: req.params.id }).lean();
+    return res.json({
+        ...foundation,
+        combos
+    });
+});
+
+/**
+ * GET /api/foundations/{id}/combos
+ * @summary GET all combos from a specific foundation
+ * @tags Foundations
+ * @tags Combos
+ * @param {string} id.path - Foundation id
+ * @return {array<Combo>} 200 - Success Response
+ */
+ router.get('/:id/combos', async (req, res) => {
+    const foundation = await Foundation.findOne({ id: req.params.id }).lean();
+    if(!foundation) {
+        return res.json({ error: { message: "Foundation doesn't exists", body: req.params }});
+    }
+
+    const combos = await Combo.find({ foundations: req.params.id }).lean();
+    return res.json(combos);
 });
 
 /**
