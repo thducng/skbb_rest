@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/foundations
- * @summary GET all completed foundations of a specific profile
+ * @summary GET all completed foundations from a specific profile
  * @tags Profiles
  * @tags Foundations
  * @param {string} id.path - Profile id
@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/missions
- * @summary GET all completed missions of a specific profile
+ * @summary GET all completed missions from a specific profile
  * @tags Profiles
  * @tags Missions
  * @param {string} id.path - Profile id
@@ -87,7 +87,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/feedbacks
- * @summary GET all feedbacks of a specific profile
+ * @summary GET all feedbacks from a specific profile
  * @tags Profiles
  * @tags Feedbacks
  * @param {string} id.path - Profile id
@@ -106,7 +106,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/files
- * @summary GET all files of a specific profile
+ * @summary GET all files from a specific profile
  * @tags Profiles
  * @param {string} id.path - Profile id
  * @return {array<File>} 200 - Success Response
@@ -118,7 +118,7 @@ router.get('/:id/files', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/videos
- * @summary GET all videos of a specific profile
+ * @summary GET all videos from a specific profile
  * @tags Profiles
  * @param {string} id.path - Profile id
  * @return {array<File>} 200 - Success Response
