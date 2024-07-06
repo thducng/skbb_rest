@@ -27,11 +27,17 @@ router.get('/', async (req, res) => {
 });
 
 /**
+ * Login Arguments
+ * @typedef {object} LoginArgs
+ * @property {string} email.required - The email of the user
+ * @property {string} password.required - The password of the user
+ */
+
+/**
  * POST /api/users/login
  * @summary LOGIN a specific user
  * @tags Users
- * @param {string} request.body.email.required - Email to login
- * @param {string} request.body.password.required - Password to login
+ * @param {LoginArgs} request.body.required - Login info
  * @return {User} 200 - Success Response
  */
 
