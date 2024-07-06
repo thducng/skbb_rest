@@ -27,46 +27,6 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * GET /api/users/{id}/delete
- * @summary GET a specific user
- * @tags Users
- * @param {string} id.path - User id
- * @return {User} 200 - Success Response
- */
-router.get('/:id', async (req, res) => {
-    const user = await User.findOne({ id: req.params.id }).lean();
-
-    if(!user) {
-        return res.json({ error: { message: "User doesn't exists", body: req.body }});
-    }
-
-    const profiles = await Profile.find({ userId: req.params.id, deletedAt: null }).lean();
-    return res.json({ ...user, profiles });
-});
-
-/**
- * POST /api/users/{id}/delete
- * @summary DELETE a specific user
- * @tags Users
- * @param {string} id.path - User id
- * @return {User} 200 - Success Response
- */
-router.post('/:id/delete', async (req, res) => {
-    // Check on admin user
-    const user = await User.findOne({ id: req.params.id });
-
-    if(!user) {
-        return res.json({ error: { message: "User doesn't exists", body: req.body }});
-    }
-
-    await Profile.updateMany({ userId: req.params.id, deletedAt: null }, { deletedAt: new Date() }).lean();
-    user.deletedAt = new Date();
-    const newUser = await user.save();
-    const profiles = await Profile.find({ userId: req.params.id }).lean();
-    return res.json({ ...newUser.toObject(), profiles });
-});
-
-/**
  * POST /api/users/login
  * @summary LOGIN a specific user
  * @tags Users
@@ -138,6 +98,83 @@ router.post('/signup', async (req, res) => {
 });
 
 /**
+ * GET /api/users/{id}/delete
+ * @summary GET a specific user
+ * @tags Users
+ * @param {string} id.path - User id
+ * @return {User} 200 - Success Response
+ */
+ router.get('/:id', async (req, res) => {
+    const user = await User.findOne({ id: req.params.id }).lean();
+
+    if(!user) {
+        return res.json({ error: { message: "User doesn't exists", body: req.body }});
+    }
+
+    const profiles = await Profile.find({ userId: req.params.id, deletedAt: null }).lean();
+    return res.json({ ...user, profiles });
+});
+
+/**
+ * POST /api/users/{id}
+ * @summary UPDATE a specific user
+ * @tags Users
+ * @param {string} id.path - User id
+ * @param {UserArgs} request.body.required - User info
+ * @return {User} 200 - Success Response
+ */
+
+ router.post('/:id', async (req, res) => {
+    const { email, type } = req.body;
+    const user = await User.findOne({ id: req.params.id });
+
+    if(!user) {
+        return res.json({ error: { message: "User doesn't exists", body: req.body }});
+    }
+
+    if(type && !validUserTypes.includes(type)) {
+        return res.json({ error: { message: "Invalid user type", body: req.body }});
+    }
+
+    const exists = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
+    if(exists && user.email !== email) {
+        return res.json({ error: { message: "Email is already in use", body: req.body }});
+    }
+
+    const keys = [ "email", "password", "name", "lastname", "zip", "city", "terms", "type" ];
+    for (let idx = 0; idx < keys.length; idx++) {
+        const key = keys[idx];
+        user[key] = sanitizeValue(req.body[key], user[key]);
+    }
+    user.deletedAt = null;
+
+    const newUser = await user.save();
+    return res.json(newUser);
+});
+
+/**
+ * POST /api/users/{id}/delete
+ * @summary DELETE a specific user
+ * @tags Users
+ * @param {string} id.path - User id
+ * @return {User} 200 - Success Response
+ */
+router.post('/:id/delete', async (req, res) => {
+    // Check on admin user
+    const user = await User.findOne({ id: req.params.id });
+
+    if(!user) {
+        return res.json({ error: { message: "User doesn't exists", body: req.body }});
+    }
+
+    await Profile.updateMany({ userId: req.params.id, deletedAt: null }, { deletedAt: new Date() }).lean();
+    user.deletedAt = new Date();
+    const newUser = await user.save();
+    const profiles = await Profile.find({ userId: req.params.id }).lean();
+    return res.json({ ...newUser.toObject(), profiles });
+});
+
+/**
  * POST /api/users/{id}/createProfile
  * @summary CREATE a profile on a specific user
  * @tags Users
@@ -178,43 +215,6 @@ router.post('/:id/createProfile', async (req, res) => {
         active: true
     }).save();
     return res.json(newProfile.toObject());
-});
-
-/**
- * POST /api/users/{id}
- * @summary UPDATE a specific user
- * @tags Users
- * @param {string} id.path - User id
- * @param {UserArgs} request.body.required - User info
- * @return {User} 200 - Success Response
- */
-
-router.post('/:id', async (req, res) => {
-    const { email, type } = req.body;
-    const user = await User.findOne({ id: req.params.id });
-
-    if(!user) {
-        return res.json({ error: { message: "User doesn't exists", body: req.body }});
-    }
-
-    if(type && !validUserTypes.includes(type)) {
-        return res.json({ error: { message: "Invalid user type", body: req.body }});
-    }
-
-    const exists = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
-    if(exists && user.email !== email) {
-        return res.json({ error: { message: "Email is already in use", body: req.body }});
-    }
-
-    const keys = [ "email", "password", "name", "lastname", "zip", "city", "terms", "type" ];
-    for (let idx = 0; idx < keys.length; idx++) {
-        const key = keys[idx];
-        user[key] = sanitizeValue(req.body[key], user[key]);
-    }
-    user.deletedAt = null;
-
-    const newUser = await user.save();
-    return res.json(newUser);
 });
 
 module.exports = router;
