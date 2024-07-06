@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 /**
  * An Event
  * @typedef {object} Event
- * @property {Date} date.required - The date for the event
+ * @property {date} date.required - The date for the event
  * @property {string} event.required - The event name
  * @property {string} url - The main url for the event
  * @property {string} venue - The venue name
