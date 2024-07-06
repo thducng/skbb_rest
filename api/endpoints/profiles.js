@@ -5,6 +5,8 @@ const router = express();
 
 const Profile = require('../models/profile.model');
 const File = require('../models/file.model');
+const Progression = require('../models/progression.model');
+const Feedback = require('../models/feedback.model');
 
 const validProfileTypes = [
     'GUEST',
@@ -24,13 +26,29 @@ router.get('/:id', async (req, res) => {
     if(!profile) {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
-    return res.json(profile);
+
+    const { foundations, missions } = await Progression.findOne({ profileId: profile.id }).lean();
+    const feedbacks = await Feedback.findOne({ profileId: profile.id }).lean();
+
+    return res.json({
+        ...profile,
+        foundations,
+        missions,
+        feedbacks
+    });
 });
 
 router.get('/:id/files', async (req, res) => {
     const files = await File.find({ profileId: req.params.id }).lean();
     return res.json(files);
 });
+
+
+router.get('/:id/videos', async (req, res) => {
+    const videos = await File.find({ profileId: req.params.id, contentType: { $in: ["video/mp4"]} }).lean();
+    return res.json(videos);
+});
+
 
 router.post('/:id/addExp', async (req, res) => {
     const { exp } = req.body;
