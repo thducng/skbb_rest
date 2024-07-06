@@ -10,7 +10,7 @@ const schema = new Schema({
     name: String,
     category: String,
     level: String,
-    exp: number,
+    exp: Number,
     criteria: [String],
     youtubeUrl: String,
     thumbnailUrl: String
