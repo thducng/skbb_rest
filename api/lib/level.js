@@ -48,9 +48,9 @@ async function addExp(profile, exp) {
     return await Profile.findOne({ id: profile.id }).lean();
 }
 
-async function addItems(profile, items) {
+async function addItems(profile, newItems) {
     const items = profile.items || [];
-    items.push(...items);
+    items.push(...newItems);
     await Profile.updateOne({ id: profile.id }, { items });
     return await Profile.findOne({ id: profile.id }).lean();
 }
