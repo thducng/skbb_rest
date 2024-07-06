@@ -19,7 +19,7 @@ const options = {
         name: 'MIT',
       },
     },
-    filesPattern: './api/**.js',
+    filesPattern: './**/*.js',
     baseDir: __dirname
   };
 expressJSDocSwagger(app)(options);
