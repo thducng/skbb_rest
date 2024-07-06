@@ -106,7 +106,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/files
- * @summary GET all files of from the profile
+ * @summary GET all files of a specific profile
  * @tags Profiles
  * @param {string} id.path - Profile id
  * @return {array<File>} 200 - Success Response
@@ -118,7 +118,7 @@ router.get('/:id/files', async (req, res) => {
 
 /**
  * GET /api/profiles/{id}/videos
- * @summary GET all videos of from the profile
+ * @summary GET all videos of a specific profile
  * @tags Profiles
  * @param {string} id.path - Profile id
  * @return {array<File>} 200 - Success Response
