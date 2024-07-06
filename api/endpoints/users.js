@@ -67,7 +67,7 @@ router.post('/:id/delete', async (req, res) => {
 });
 
 /**
- * POST /api/users/signup
+ * POST /api/users/login
  * @summary LOGIN a specific user
  * @tags Users
  * @param {string} request.body.email.required - Email to login
