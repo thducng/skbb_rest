@@ -14,5 +14,5 @@ const schema = new Schema({
     missions: [String]
 }, { timestamps: true });
 
-const Model = mongoose.model('Progression', schema);
+const Model = mongoose.model('progression', schema);
 module.exports = Model;

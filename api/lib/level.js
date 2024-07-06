@@ -48,4 +48,11 @@ async function addExp(profile, exp) {
     return await Profile.findOne({ id: profile.id }).lean();
 }
 
-module.exports = { addExp };
+async function addItems(profile, items) {
+    const items = profile.items || [];
+    items.push(...items);
+    await Profile.updateOne({ id: profile.id }, { items });
+    return await Profile.findOne({ id: profile.id }).lean();
+}
+
+module.exports = { addExp, addItems };

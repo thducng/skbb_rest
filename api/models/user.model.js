@@ -27,5 +27,5 @@ const schema = new Schema({
     deletedAt: Date
 }, { timestamps: true });
 
-const Model = mongoose.model('User', schema);
+const Model = mongoose.model('user', schema);
 module.exports = Model;

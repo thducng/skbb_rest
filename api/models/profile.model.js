@@ -25,9 +25,10 @@ const schema = new Schema({
     prestigeStar: Number,
     level: Number,
     exp: Number,
+    items: [String],
 
     deletedAt: Date
 }, { timestamps: true });
 
-const Model = mongoose.model('Profile', schema);
+const Model = mongoose.model('profile', schema);
 module.exports = Model;

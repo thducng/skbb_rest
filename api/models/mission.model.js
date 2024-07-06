@@ -9,11 +9,12 @@ const schema = new Schema({
     },
     name: String,
     category: String,
-    level: String,
+    description: String,
+    requiredFoundations: [String],
+    requiredMinimumPosition: String,
     exp: number,
-    criteria: [String],
-    youtubeUrl: String,
-    thumbnailUrl: String
+    items: [String],
+    badge: String
 }, { timestamps: true });
 
 const Model = mongoose.model('foundation', schema);

@@ -1,10 +1,12 @@
 const express = require('express');
-const { addExp } = require('../lib/level');
+const { addExp, addItems } = require('../lib/level');
 const { sanitizeValue } = require('../lib/sanitizeValue');
 const router = express();
 
 const Profile = require('../models/profile.model');
 const File = require('../models/file.model');
+const Foundation = require('../models/foundation.model');
+const Mission = require('../models/mission.model');
 const Progression = require('../models/progression.model');
 const Feedback = require('../models/feedback.model');
 
@@ -21,21 +23,30 @@ router.get('/', async (req, res) => {
     return res.json(profiles);
 });
 
+async function getProfile(id) {
+    const profile = await Profile.findOne({ id }).lean();
+    if(!profile) {
+        return null;
+    }
+
+    const { foundations = [], missions = [] } = await Progression.findOne({ profileId: profile.id }).lean() || {};
+    const feedbacks = await Feedback.find({ profileId: profile.id }).lean();
+
+    return {
+        ...profile,
+        foundations,
+        missions,
+        feedbacks
+    };
+}
+
 router.get('/:id', async (req, res) => {
     const profile = await Profile.findOne({ id: req.params.id }).lean();
     if(!profile) {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
-    const { foundations = [], missions = [] } = await Progression.findOne({ profileId: profile.id }).lean() || {};
-    const feedbacks = await Feedback.find({ profileId: profile.id }).lean();
-
-    return res.json({
-        ...profile,
-        foundations,
-        missions,
-        feedbacks
-    });
+    return res.json(await getProfile(profile.id));
 });
 
 router.get('/:id/files', async (req, res) => {
@@ -104,6 +115,41 @@ router.post('/:id/update', async (req, res) => {
 
     const newProfile = await profile.save();
     return res.json(newProfile.toObject());
+});
+
+router.post('/:id/complete', async (req, res) => {
+    const { type, id } = req.body;
+    const profile = await Profile.findOne({ id: req.params.id });
+
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+
+    switch(type) {
+        case "foundation": 
+            const foundation = await Foundation.findOne({ id }).lean();
+            if(!foundation) {
+                return res.json({ error: { message: "Invalid foundation id", body: req.params }});
+            }
+
+            await Progression.updateOne({ profileId: profile.id }, { $push: { foundations: id }});
+            await addExp(profile, foundation.exp);
+            break;
+        case "mission":
+            const mission = await Mission.findOne({ id }).lean();
+            if(!mission) {
+                return res.json({ error: { message: "Invalid mission id", body: req.params }});
+            }
+
+            await Progression.updateOne({ profileId: profile.id }, { $push: { missions: id }});
+            await addExp(profile, mission.exp);
+            await addItems(profile, mission.items);
+            break;
+        default: 
+            return res.json({ error: { message: "Invalid complete type", body: req.params }});
+    }
+
+    return res.json(await getProfile(profile.id));
 });
 
 module.exports = router;

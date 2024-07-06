@@ -6,6 +6,8 @@ const router = express();
 const profiles = require('./endpoints/profiles');
 const users = require('./endpoints/users');
 const foundations = require('./endpoints/foundations');
+const missions = require('./endpoints/missions');
+const feedbacks = require('./endpoints/feedbacks');
 const courses = require('./endpoints/courses');
 const levels = require('./endpoints/levels');
 const events = require('./endpoints/events');
@@ -18,6 +20,8 @@ router.get('/', (req, res) => {
 router.use('/profiles', profiles);
 router.use('/users', users);
 router.use('/foundations', foundations);
+router.use('/missions', missions);
+router.use('/feedbacks', feedbacks);
 router.use('/courses', courses);
 router.use('/levels', levels);
 router.use('/events', events);

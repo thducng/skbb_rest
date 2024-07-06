@@ -11,5 +11,5 @@ const schema = new Schema({
     attachments: [String]
 }, { timestamps: true });
 
-const Model = mongoose.model('Feedback', schema);
+const Model = mongoose.model('feedback', schema);
 module.exports = Model;
