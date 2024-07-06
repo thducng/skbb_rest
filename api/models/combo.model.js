@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
  * @property {string} category - The category this combo is in
  * @property {string} level - The required level for this combo
  * @property {number} exp - The experience gained from completing this combo
- * @property {array<string>} foundations - The list of criterias
+ * @property {array<string>} foundations - The list of foundation id that makes this combo
  * @property {string} youtubeUrl - The youtube url for the tutorial
  * @property {string} thumbnailUrl - The url for the thumbnail
  */
@@ -21,7 +21,7 @@ const Schema = mongoose.Schema;
  * @property {string} category - The category this combo is in
  * @property {string} level - The required level for this combo
  * @property {number} exp.required - The experience gained from completing this combo
- * @property {array<string>} foundations.required - The list of criterias
+ * @property {array<string>} foundations.required - The list of foundation id that makes this combo
  * @property {string} youtubeUrl - The youtube url for the tutorial
  * @property {string} thumbnailUrl - The url for the thumbnail
  */
