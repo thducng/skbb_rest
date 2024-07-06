@@ -27,8 +27,8 @@ router.get('/:id', async (req, res) => {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
-    const { foundations, missions } = await Progression.findOne({ profileId: profile.id }).lean();
-    const feedbacks = await Feedback.findOne({ profileId: profile.id }).lean();
+    const { foundations = [], missions = [] } = await Progression.findOne({ profileId: profile.id }).lean() || {};
+    const feedbacks = await Feedback.find({ profileId: profile.id }).lean();
 
     return res.json({
         ...profile,
