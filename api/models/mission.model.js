@@ -12,7 +12,7 @@ const schema = new Schema({
     description: String,
     requiredFoundations: [String],
     requiredMinimumPosition: String,
-    exp: number,
+    exp: Number,
     items: [String],
     badge: String
 }, { timestamps: true });
