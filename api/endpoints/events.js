@@ -14,26 +14,9 @@ const validStatus = [
 ]
 
 /**
- * GET /api/events
- * @summary Get all events
- */
-router.get('/', async (req, res) => {
-    return res.json(await Event.find().lean());
-});
-
-/**
- * GET /api/events/{id}
- * @summary Get specific event
- * @param {string} id.path
- */
-router.get('/:id', async (req, res) => {
-    return res.json(await Event.findOne({ id: req.params.id }).lean());
-});
-
-/**
  * An Event
  * @typedef {object} Event
- * @property {string} date.required - The date for the event
+ * @property {Date} date.required - The date for the event
  * @property {string} event.required - The event name
  * @property {string} url - The main url for the event
  * @property {string} venue - The venue name
@@ -52,9 +35,29 @@ router.get('/:id', async (req, res) => {
  */
 
 /**
+ * GET /api/events
+ * @summary Get all events
+ * @return {array<Event>} 200
+ */
+router.get('/', async (req, res) => {
+    return res.json(await Event.find().lean());
+});
+
+/**
+ * GET /api/events/{id}
+ * @summary Get specific event
+ * @param {string} id.path - Event id
+ * @return {Event} 200
+ */
+router.get('/:id', async (req, res) => {
+    return res.json(await Event.findOne({ id: req.params.id }).lean());
+});
+
+/**
  * POST /api/events
+ * @summary Update specific event
  * @param {Event} request.body.required - Event info
- * @return {object} 200 - song response
+ * @return {Event} 200
  */
 router.post('/', async (req, res) => {
     const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, address, week } = req.body;
@@ -107,8 +110,8 @@ router.get('/scrape/:source', async (req, res) => {
 /**
  * POST /api/events/{id}/delete
  * @summary delete a specific event
- * @param {string} id.path
- * @return {object} 200 - song response
+ * @param {string} id.path - Event id
+ * @return {Event} 200
  */
 router.post('/:id/delete', async (req, res) => {
     // Check on admin user or actual user id
@@ -126,8 +129,9 @@ router.post('/:id/delete', async (req, res) => {
 /**
  * POST /api/events/{id}/update
  * @summary update a specific event
- * @param {string} id.path
- * @return {object} 200 - song response
+ * @param {string} id.path - Event id
+ * @param {Event} request.body.required - Event info
+ * @return {Event} 200
  */
 router.post('/:id/update', async (req, res) => {
     const existingEvent = await Event.findOne({ id: req.params.id });
