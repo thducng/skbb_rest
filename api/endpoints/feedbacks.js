@@ -4,30 +4,6 @@ const router = express();
 const Feedback = require('../models/feedback.model');
 
 /**
- * GET /api/feedbacks
- * @summary Get all feedback
- * @return {object} 200 - song response
- */
-router.get('/', async (req, res) => {
-    const results = await Feedback.find({}).lean();
-    return res.json(results);
-});
-
-/**
- * GET /api/feedbacks/{id}
- * @summary Get a specific feedback
- * @param {string} id.path
- * @return {object} 200 - song response
- */
-router.get('/:id', async (req, res) => {
-    const result = await Feedback.findOne({ id: req.params.id }).lean();
-    if(!result) {
-        return res.json({ error: { message: "Feedback doesn't exists", body: req.params }});
-    }
-    return res.json(result);
-});
-
-/**
  * A Feedback
  * @typedef {object} Feedback
  * @property {string} profileId.required - The profileId of the one getting the feedback
@@ -37,9 +13,35 @@ router.get('/:id', async (req, res) => {
  */
 
 /**
+ * GET /api/feedbacks
+ * @summary Get all feedback
+ * @return {Feedback} 200
+ */
+router.get('/', async (req, res) => {
+    const results = await Feedback.find({}).lean();
+    return res.json(results);
+});
+
+/**
+ * GET /api/feedbacks/{id}
+ * @summary Get a specific feedback
+ * @param {string} id.path - Feedback id
+ * @return {Feedback} 200
+ */
+router.get('/:id', async (req, res) => {
+    const result = await Feedback.findOne({ id: req.params.id }).lean();
+    if(!result) {
+        return res.json({ error: { message: "Feedback doesn't exists", body: req.params }});
+    }
+    return res.json(result);
+});
+
+
+/**
  * POST /api/feedbacks
+ * @summary Update a specific feedback
  * @param {Feedback} request.body.required - Feedback info
- * @return {object} 200 - song response
+ * @return {Feedback} 200
  */
 router.post('/', async (req, res) => {
     const { profileId, message, from, attachments = [] } = req.body;
@@ -66,9 +68,10 @@ router.post('/', async (req, res) => {
 
 /**
  * POST /api/feedbacks/{id}
- * @summary update a specific feedback
- * @param {string} id.path
- * @return {object} 200 - song response
+ * @summary Update a specific feedback
+ * @param {string} id.path - Feedback id
+ * @param {Feedback} request.body.required - Feedback info
+ * @return {Feedback} 200
  */
 router.post('/:id', async (req, res) => {
     const { profileId, message, from, attachments = [] } = req.body;
@@ -95,9 +98,9 @@ router.post('/:id', async (req, res) => {
 
 /**
  * POST /api/feedbacks/{id}/delete
- * @summary delete a specific feedback
- * @param {string} id.path
- * @return {object} 200 - song response
+ * @summary Delete a specific feedback
+ * @param {string} id.path - Feedback id
+ * @return {Feedback} 200
  */
 router.get('/:id/delete', async (req, res) => {
     await Feedback.deleteOne({ id: req.params.id });

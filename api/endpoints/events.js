@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
 
 /**
  * GET /api/events/{id}
- * @summary Get specific event
+ * @summary Get a specific event
  * @param {string} id.path - Event id
  * @return {Event} 200
  */
@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * POST /api/events
- * @summary Update specific event
+ * @summary Update a specific event
  * @param {Event} request.body.required - Event info
  * @return {Event} 200
  */
