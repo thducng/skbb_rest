@@ -17,5 +17,5 @@ const schema = new Schema({
     badge: String
 }, { timestamps: true });
 
-const Model = mongoose.model('foundation', schema);
+const Model = mongoose.model('mission', schema);
 module.exports = Model;
