@@ -15,6 +15,7 @@ const Feedback = require('../models/feedback.model');
 /**
  * GET /api/feedbacks
  * @summary Get all feedback
+ * @tags feedback all
  * @return {Feedback} 200
  */
 router.get('/', async (req, res) => {
@@ -25,6 +26,7 @@ router.get('/', async (req, res) => {
 /**
  * GET /api/feedbacks/{id}
  * @summary Get a specific feedback
+ * @tags feedback single
  * @param {string} id.path - Feedback id
  * @return {Feedback} 200
  */
@@ -39,7 +41,8 @@ router.get('/:id', async (req, res) => {
 
 /**
  * POST /api/feedbacks
- * @summary Update a specific feedback
+ * @summary Create a specific feedback
+ * @tags feedback single create
  * @param {Feedback} request.body.required - Feedback info
  * @return {Feedback} 200
  */
@@ -69,6 +72,7 @@ router.post('/', async (req, res) => {
 /**
  * POST /api/feedbacks/{id}
  * @summary Update a specific feedback
+ * @tags feedback single update
  * @param {string} id.path - Feedback id
  * @param {Feedback} request.body.required - Feedback info
  * @return {Feedback} 200
@@ -99,6 +103,7 @@ router.post('/:id', async (req, res) => {
 /**
  * POST /api/feedbacks/{id}/delete
  * @summary Delete a specific feedback
+ * @tags feedback single delete
  * @param {string} id.path - Feedback id
  * @return {Feedback} 200
  */
