@@ -5,6 +5,7 @@ const router = express();
 
 const Profile = require('../models/profile.model');
 const File = require('../models/file.model');
+const Combo = require('../models/combo.model');
 const Foundation = require('../models/foundation.model');
 const Mission = require('../models/mission.model');
 const Progression = require('../models/progression.model');
@@ -83,6 +84,26 @@ router.get('/:id', async (req, res) => {
     const missions = await Mission.find({ id: { $in: progression?.missions || [] } }).lean();
 
     return res.json(missions);
+});
+
+/**
+ * GET /api/profiles/{id}/combos
+ * @summary GET all completed combos from a specific profile
+ * @tags Profiles
+ * @tags Combos
+ * @param {string} id.path - Profile id
+ * @return {array<Combo>} 200 - Success Response
+ */
+ router.get('/:id/combos', async (req, res) => {
+    const profile = await Profile.findOne({ id: req.params.id }).lean();
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+
+    const progression = await Progression.findOne({ profileId: profile.id }).lean();
+    const combos = await Combo.find({ id: { $in: progression?.combos || [] } }).lean();
+
+    return res.json(combos);
 });
 
 /**
@@ -224,6 +245,17 @@ router.post('/:id/complete', async (req, res) => {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
+    const exists = await Progression.findOne({ profileId: profile.id }).lean();
+    if(!exists) {
+        await new Progression({
+            profileId: profile.id,
+            userId: profile.userId,
+            foundations: [],
+            missions: [],
+            combos: []
+        }).save();
+    }
+
     switch(type) {
         case "foundation": 
             const foundation = await Foundation.findOne({ id }).lean();
@@ -243,6 +275,15 @@ router.post('/:id/complete', async (req, res) => {
             await Progression.updateOne({ profileId: profile.id }, { $push: { missions: id }});
             await addExp(profile, mission.exp);
             await addItems(profile, mission.items);
+            break;
+        case "combo":
+            const combo = await Combo.findOne({ id }).lean();
+            if(!mission) {
+                return res.json({ error: { message: "Invalid combo id", body: req.params }});
+            }
+
+            await Progression.updateOne({ profileId: profile.id }, { $push: { combos: id }});
+            await addExp(profile, combo.exp);
             break;
         default: 
             return res.json({ error: { message: "Invalid complete type", body: req.params }});

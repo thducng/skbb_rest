@@ -11,7 +11,8 @@ const schema = new Schema({
         required: true,
     },
     foundations: [String],
-    missions: [String]
+    missions: [String],
+    combos: [String]
 }, { timestamps: true });
 
 const Model = mongoose.model('progression', schema);
