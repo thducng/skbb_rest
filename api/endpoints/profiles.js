@@ -18,6 +18,12 @@ const validProfileTypes = [
     'ADMIN'
 ]
 
+/**
+ * GET /api/profiles
+ * @summary GET all profiles
+ * @tags Profiles
+ * @return {array<Profile>} 200 - Success Response
+ */
 router.get('/', async (req, res) => {
     const profiles = await Profile.find({}).lean();
     return res.json(profiles);
@@ -40,6 +46,13 @@ async function getProfile(id) {
     };
 }
 
+/**
+ * GET /api/profiles/{id}
+ * @summary GET a specific profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @return {Profile} 200 - Success Response
+ */
 router.get('/:id', async (req, res) => {
     const profile = await Profile.findOne({ id: req.params.id }).lean();
     if(!profile) {
@@ -49,18 +62,38 @@ router.get('/:id', async (req, res) => {
     return res.json(await getProfile(profile.id));
 });
 
+/**
+ * GET /api/profiles/{id}/files
+ * @summary GET all files of from the profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @return {array<File>} 200 - Success Response
+ */
 router.get('/:id/files', async (req, res) => {
     const files = await File.find({ profileId: req.params.id }).lean();
     return res.json(files);
 });
 
-
+/**
+ * GET /api/profiles/{id}/videos
+ * @summary GET all videos of from the profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @return {array<File>} 200 - Success Response
+ */
 router.get('/:id/videos', async (req, res) => {
     const videos = await File.find({ profileId: req.params.id, contentType: { $in: ["video/mp4"]} }).lean();
     return res.json(videos);
 });
 
-
+/**
+ * POST /api/profiles/{id}/addExp
+ * @summary ADD experience points to a profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @param {number} request.body.exp.required - Experience points to add
+ * @return {Profile} 200 - Success Response
+ */
 router.post('/:id/addExp', async (req, res) => {
     const { exp } = req.body;
     const profile = await Profile.findOne({ id: req.params.id }).lean();
@@ -78,6 +111,13 @@ router.post('/:id/addExp', async (req, res) => {
     return res.json(newProfile);
 });
 
+/**
+ * POST /api/profiles/{id}/delete
+ * @summary DELETE a specific profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @return {Profile} 200 - Success Response
+ */
 router.post('/:id/delete', async (req, res) => {
     // Check on admin user or actual user id
     const profile = await Profile.findOne({ id: req.params.id });
@@ -91,6 +131,14 @@ router.post('/:id/delete', async (req, res) => {
     return res.json(newProfile.toObject());
 });
 
+/**
+ * POST /api/profiles/{id}/update
+ * @summary UPDATE a specific profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @param {ProfileArgs} request.body.required - Profile info
+ * @return {Profile} 200 - Success Response
+ */
 router.post('/:id/update', async (req, res) => {
     const { type } = req.body;
     const profile = await Profile.findOne({ id: req.params.id });
@@ -117,6 +165,15 @@ router.post('/:id/update', async (req, res) => {
     return res.json(newProfile.toObject());
 });
 
+/**
+ * POST /api/profiles/{id}/complete
+ * @summary COMPLETE a progression for the profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @param {string} request.body.type.required - Type of progression ("foundation", "mission", etc.)
+ * @param {string} request.body.id.required - The id of the progression ("foundation id", "mission id", etc.)
+ * @return {Profile} 200 - Success Response
+ */
 router.post('/:id/complete', async (req, res) => {
     const { type, id } = req.body;
     const profile = await Profile.findOne({ id: req.params.id });

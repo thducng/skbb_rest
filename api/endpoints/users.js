@@ -11,6 +11,12 @@ const validUserTypes = [
     'ADMIN'
 ];
 
+/**
+ * GET /api/users
+ * @summary GET all users
+ * @tags Users
+ * @return {array<User>} 200 - Success Response
+ */
 router.get('/', async (req, res) => {
     const users = await User.find({}).lean();
     const profiles = await Profile.find({ userId: { $in: users.map((i) => i.id) }, deletedAt: null }).lean()
@@ -20,6 +26,13 @@ router.get('/', async (req, res) => {
     }));
 });
 
+/**
+ * GET /api/users/{id}/delete
+ * @summary GET a specific user
+ * @tags Users
+ * @param {string} id.path - User id
+ * @return {User} 200 - Success Response
+ */
 router.get('/:id', async (req, res) => {
     const user = await User.findOne({ id: req.params.id }).lean();
 
@@ -31,6 +44,13 @@ router.get('/:id', async (req, res) => {
     return res.json({ ...user, profiles });
 });
 
+/**
+ * POST /api/users/{id}/delete
+ * @summary DELETE a specific user
+ * @tags Users
+ * @param {string} id.path - User id
+ * @return {User} 200 - Success Response
+ */
 router.post('/:id/delete', async (req, res) => {
     // Check on admin user
     const user = await User.findOne({ id: req.params.id });
@@ -46,6 +66,15 @@ router.post('/:id/delete', async (req, res) => {
     return res.json({ ...newUser.toObject(), profiles });
 });
 
+/**
+ * POST /api/users/signup
+ * @summary LOGIN a specific user
+ * @tags Users
+ * @param {string} request.body.email.required - Email to login
+ * @param {string} request.body.password.required - Password to login
+ * @return {User} 200 - Success Response
+ */
+
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' }, password }).lean();
@@ -58,6 +87,13 @@ router.post('/login', async (req, res) => {
     return res.json({ ...user, profiles });
 });
 
+/**
+ * POST /api/users/signup
+ * @summary CREATE a new user
+ * @tags Users
+ * @param {UserArgs} request.body.required - User info
+ * @return {User} 200 - Success Response
+ */
 router.post('/signup', async (req, res) => {
     const { email, password, name, lastname, zip, city, terms, type } = req.body;
     const user = await User.findOne({ email: { $regex: new RegExp(email), $options: 'i' } }).lean();
@@ -101,6 +137,15 @@ router.post('/signup', async (req, res) => {
     return res.json(newUser.toObject());
 });
 
+/**
+ * POST /api/users/{id}/createProfile
+ * @summary CREATE a profile on a specific user
+ * @tags Users
+ * @tags Profiles
+ * @param {string} id.path - User id
+ * @param {ProfileArgs} request.body.required - Profile info
+ * @return {User} 200 - Success Response
+ */
 router.post('/:id/createProfile', async (req, res) => {
     const { userId, name, birthday, crew, school, image, type } = req.body;
     const profile = await Profile.findOne({ userId, name }).lean();
@@ -134,6 +179,15 @@ router.post('/:id/createProfile', async (req, res) => {
     }).save();
     return res.json(newProfile.toObject());
 });
+
+/**
+ * POST /api/users/{id}
+ * @summary UPDATE a specific user
+ * @tags Users
+ * @param {string} id.path - User id
+ * @param {UserArgs} request.body.required - User info
+ * @return {User} 200 - Success Response
+ */
 
 router.post('/:id', async (req, res) => {
     const { email, type } = req.body;

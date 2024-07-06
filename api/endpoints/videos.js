@@ -22,11 +22,25 @@ conn.once('open', () => {
     gfs.collection('videoBucket');
 });
 
+/**
+ * GET /api/videos
+ * @summary GET all video files
+ * @tags Videos
+ * @return {array<File>} 200 - Success Response
+ */
 router.get('/', async (req, res) => {
     const videos = await File.find({ contentType: { $in: ["video/mp4"]} }).lean();
     return res.json(videos);
 });
 
+/**
+ * GET /api/videos/{id}
+ * @summary GET a specific file
+ * @tags Videos
+ * @tags Files
+ * @param {string} id.path - File id
+ * @return {File} 200 - Success Response
+ */
 router.get('/:id', async (req, res) => {
     let { id } = req.params
 
@@ -40,6 +54,16 @@ router.get('/:id', async (req, res) => {
     downloadStream.pipe(res);
 });
 
+/**
+ * POST /api/videos/upload
+ * @summary ADD a file to a profile
+ * @tags Profiles
+ * @tags Files
+ * @tags Videos
+ * @param {string} request.body.profileId.required - Profile to add file to
+ * @param {object} request.file.required - File to add
+ * @return {File} 200 - Success Response
+ */
 router.post('/upload', upload.single('file'), async (req, res) => {
     try {
         if (!req.file || !req.file.buffer) {
