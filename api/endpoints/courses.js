@@ -7,7 +7,7 @@ const CourseHistory = require('../models/courseHistory.model');
 /**
  * GET /api/courses
  * @summary Get all courses
- * @tags course all
+ * @tags course
  */
 router.get('/', async (req, res) => {
     const courses = await Course.find({}).lean();
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 /**
  * GET /api/courses/{id}
  * @summary Get a specific course
- * @tags course single
+ * @tags course
  * @param {string} id.path
  */
 router.get('/:id', async (req, res) => {

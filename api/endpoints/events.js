@@ -16,7 +16,7 @@ const validStatus = [
 /**
  * GET /api/events
  * @summary Get all events
- * @tags event all
+ * @tags event
  * @return {array<Event>} 200
  */
 router.get('/', async (req, res) => {
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
 /**
  * GET /api/events/{id}
  * @summary Get a specific event
- * @tags event single
+ * @tags event
  * @param {string} id.path - Event id
  * @return {Event} 200
  */
@@ -37,7 +37,7 @@ router.get('/:id', async (req, res) => {
 /**
  * POST /api/events
  * @summary Create a specific event
- * @tags event single create
+ * @tags event
  * @param {Event} request.body.required - Event info
  * @return {Event} 200
  */
@@ -92,7 +92,7 @@ router.get('/scrape/:source', async (req, res) => {
 /**
  * POST /api/events/{id}/delete
  * @summary delete a specific event
- * @tags event single delete
+ * @tags event
  * @param {string} id.path - Event id
  * @return {Event} 200
  */
@@ -112,7 +112,7 @@ router.post('/:id/delete', async (req, res) => {
 /**
  * POST /api/events/{id}/update
  * @summary update a specific event
- * @tags event single update
+ * @tags event
  * @param {string} id.path - Event id
  * @param {Event} request.body.required - Event info
  * @return {Event} 200
