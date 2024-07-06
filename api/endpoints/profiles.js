@@ -29,26 +29,6 @@ router.get('/', async (req, res) => {
     return res.json(profiles);
 });
 
-async function getProfile(id) {
-    const profile = await Profile.findOne({ id }).lean();
-    if(!profile) {
-        return null;
-    }
-
-    const progression = await Progression.findOne({ profileId: profile.id }).lean();
-    const feedbacks = await Feedback.find({ profileId: profile.id }).lean();
-
-    const foundations = await Foundation.find({ id: { $in: progression?.foundations || [] } }).lean();
-    const missions = await Mission.find({ id: { $in: progression?.missions || [] } }).lean();
-
-    return {
-        ...profile,
-        foundations,
-        missions,
-        feedbacks
-    };
-}
-
 /**
  * GET /api/profiles/{id}
  * @summary GET a specific profile
@@ -62,7 +42,66 @@ router.get('/:id', async (req, res) => {
         return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
     }
 
-    return res.json(await getProfile(profile.id));
+    return res.json(profile);
+});
+
+/**
+ * GET /api/profiles/{id}/foundations
+ * @summary GET all completed foundations of a specific profile
+ * @tags Profiles
+ * @tags Foundations
+ * @param {string} id.path - Profile id
+ * @return {array<Foundation>} 200 - Success Response
+ */
+ router.get('/:id/foundations', async (req, res) => {
+    const profile = await Profile.findOne({ id: req.params.id }).lean();
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+
+    const progression = await Progression.findOne({ profileId: profile.id }).lean();
+    const foundations = await Foundation.find({ id: { $in: progression?.foundations || [] } }).lean();
+
+    return res.json(foundations);
+});
+
+/**
+ * GET /api/profiles/{id}/missions
+ * @summary GET all completed missions of a specific profile
+ * @tags Profiles
+ * @tags Missions
+ * @param {string} id.path - Profile id
+ * @return {array<Mission>} 200 - Success Response
+ */
+ router.get('/:id/missions', async (req, res) => {
+    const profile = await Profile.findOne({ id: req.params.id }).lean();
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+
+    const progression = await Progression.findOne({ profileId: profile.id }).lean();
+    const missions = await Mission.find({ id: { $in: progression?.missions || [] } }).lean();
+
+    return res.json(missions);
+});
+
+/**
+ * GET /api/profiles/{id}/feedbacks
+ * @summary GET all feedbacks of a specific profile
+ * @tags Profiles
+ * @tags Feedbacks
+ * @param {string} id.path - Profile id
+ * @return {array<Feedback>} 200 - Success Response
+ */
+ router.get('/:id/feedbacks', async (req, res) => {
+    const profile = await Profile.findOne({ id: req.params.id }).lean();
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+
+    const feedbacks = await Feedback.find({ profileId: profile.id }).lean();
+
+    return res.json(feedbacks);
 });
 
 /**
@@ -209,7 +248,8 @@ router.post('/:id/complete', async (req, res) => {
             return res.json({ error: { message: "Invalid complete type", body: req.params }});
     }
 
-    return res.json(await getProfile(profile.id));
+    const newValue = await Profile.findOne({ id }).lean();
+    return res.json(newValue);
 });
 
 module.exports = router;

@@ -18,10 +18,6 @@ const Schema = mongoose.Schema;
  * @property {number} exp - The current experience points
  * @property {array<string>} items - The list of items that the profile owns
  * @property {string} deletedAt - The date on which this profile is deleted
- * 
- * @property {array<Foundation>} foundations - The list of completed foundation id
- * @property {array<Mission>} missions - The list of completed mission id
- * @property {array<Feedback>} feedbacks - The list of feedback id
  */
 
 /**

@@ -12,8 +12,6 @@ const Schema = mongoose.Schema;
  * @property {array<string>} criteria - The list of criterias
  * @property {string} youtubeUrl - The youtube url for the tutorial
  * @property {string} thumbnailUrl - The url for the thumbnail
- * 
- * @property {array<Combo>} combos - The list of combos that includes this foundation
  */
 
 /**

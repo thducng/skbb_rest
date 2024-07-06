@@ -29,11 +29,7 @@ router.get('/:id', async (req, res) => {
         return res.json({ error: { message: "Foundation doesn't exists", body: req.params }});
     }
 
-    const combos = await Combo.find({ foundations: req.params.id }).lean();
-    return res.json({
-        ...foundation,
-        combos
-    });
+    return res.json(foundation);
 });
 
 /**
