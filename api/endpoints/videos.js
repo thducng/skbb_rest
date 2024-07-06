@@ -55,13 +55,19 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
+ * File Arguments
+ * @typedef {object} FileArgs
+ * @property {string} profileId.required - The date for the course start
+ */
+
+/**
  * POST /api/videos/upload
  * @summary ADD a file to a profile
  * @tags Profiles
  * @tags Files
  * @tags Videos
- * @param {string} request.body.profileId.required - Profile to add file to
- * @param {object} request.file.required - File to add
+ * @param {FileArgs} request.body.required - Profile id to add file to
+ * @param {object} file.request.required - File object to add
  * @return {File} 200 - Success Response
  */
 router.post('/upload', upload.single('file'), async (req, res) => {
