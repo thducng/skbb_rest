@@ -3,10 +3,24 @@ const router = express();
 
 const Mission = require('../models/mission.model');
 
+/**
+ * GET /api/missions
+ * @summary GET all missions
+ * @tags Missions
+ * @return {array<Mission>} 200 - Success Response
+ */
 router.get('/', async (req, res) => {
     const results = await Mission.find({}).lean();
     return res.json(results);
 });
+
+/**
+ * GET /api/missions/{id}
+ * @summary GET a specific mission
+ * @tags Missions
+ * @param {string} id.path - Mission id
+ * @return {Mission} 200 - Success Response
+ */
 
 router.get('/:id', async (req, res) => {
     const result = await Mission.findOne({ id: req.params.id }).lean();
@@ -16,6 +30,14 @@ router.get('/:id', async (req, res) => {
     return res.json(result);
 });
 
+
+/**
+ * POST /api/missions
+ * @summary CREATE a specific mission
+ * @tags Missions
+ * @param {MissionArgs} request.body.required - Mission info
+ * @return {Mission} 200 - Success Response
+ */
 router.post('/', async (req, res) => {
     const { name, category, description, requiredFoundations = [], requiredMinimumPosition, exp, items = [], badge } = req.body;
     const result = await Mission.findOne({ name, category }).lean();
@@ -48,6 +70,14 @@ router.post('/', async (req, res) => {
     return res.json(newMission.toObject());
 });
 
+/**
+ * POST /api/missions/{id}
+ * @summary UPDATE a specific mission
+ * @tags Missions
+ * @param {string} id.path - Mission id
+ * @param {MissionArgs} request.body.required - Mission info
+ * @return {Mission} 200 - Success Response
+ */
 router.post('/:id', async (req, res) => {
     const { name, category, description, requiredFoundations = [], requiredMinimumPosition, exp, items = [], badge } = req.body;
     const result = await Mission.findOne({ name, category }).lean();
@@ -81,6 +111,13 @@ router.post('/:id', async (req, res) => {
     return res.json(newMission);
 });
 
+/**
+ * GET /api/missions/{id}/delete
+ * @summary DELETE a specific mission
+ * @tags Missions
+ * @param {string} id.path - Mission id
+ * @return {boolean} 200 - Success Response
+ */
 router.get('/:id/delete', async (req, res) => {
     await Mission.deleteOne({ id: req.params.id });
     const newValue = await Mission.findOne({ id: req.params.id }).lean();

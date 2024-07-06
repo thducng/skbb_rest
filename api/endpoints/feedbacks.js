@@ -7,7 +7,7 @@ const Feedback = require('../models/feedback.model');
  * GET /api/feedbacks
  * @summary GET all feedback
  * @tags Feedbacks
- * @return {Feedback} 200
+ * @return {array<Feedback>} 200 - Success Response
  */
 router.get('/', async (req, res) => {
     const results = await Feedback.find({}).lean();
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
  * @summary GET a specific feedback
  * @tags Feedbacks
  * @param {string} id.path - Feedback id
- * @return {Feedback} 200
+ * @return {Feedback} 200 - Success Response
  */
 router.get('/:id', async (req, res) => {
     const result = await Feedback.findOne({ id: req.params.id }).lean();
@@ -34,8 +34,8 @@ router.get('/:id', async (req, res) => {
  * POST /api/feedbacks
  * @summary CREATE a specific feedback
  * @tags Feedbacks
- * @param {Feedback} request.body.required - Feedback info
- * @return {Feedback} 200
+ * @param {FeedbackArgs} request.body.required - Feedback info
+ * @return {Feedback} 200 - Success Response
  */
 router.post('/', async (req, res) => {
     const { profileId, message, from, attachments = [] } = req.body;
@@ -65,8 +65,8 @@ router.post('/', async (req, res) => {
  * @summary UPDATE a specific feedback
  * @tags Feedbacks
  * @param {string} id.path - Feedback id
- * @param {Feedback} request.body.required - Feedback info
- * @return {Feedback} 200
+ * @param {FeedbackArgs} request.body.required - Feedback info
+ * @return {Feedback} 200 - Success Response
  */
 router.post('/:id', async (req, res) => {
     const { profileId, message, from, attachments = [] } = req.body;
@@ -96,7 +96,7 @@ router.post('/:id', async (req, res) => {
  * @summary DELETE a specific feedback
  * @tags Feedbacks
  * @param {string} id.path - Feedback id
- * @return {Feedback} 200
+ * @return {Feedback} 200 - Success Response
  */
 router.get('/:id/delete', async (req, res) => {
     await Feedback.deleteOne({ id: req.params.id });

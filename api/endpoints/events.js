@@ -17,7 +17,7 @@ const validStatus = [
  * GET /api/events
  * @summary GET all events
  * @tags Events
- * @return {array<Event>} 200
+ * @return {array<Event>} 200 - Success Response
  */
 router.get('/', async (req, res) => {
     return res.json(await Event.find().lean());
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
  * @summary GET a specific event
  * @tags Events
  * @param {string} id.path - Event id
- * @return {Event} 200
+ * @return {Event} 200 - Success Response
  */
 router.get('/:id', async (req, res) => {
     return res.json(await Event.findOne({ id: req.params.id }).lean());
@@ -38,8 +38,8 @@ router.get('/:id', async (req, res) => {
  * POST /api/events
  * @summary CREATE a specific event
  * @tags Events
- * @param {Event} request.body.required - Event info
- * @return {Event} 200
+ * @param {EventArgs} request.body.required - Event info
+ * @return {Event} 200 - Success Response
  */
 router.post('/', async (req, res) => {
     const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, address, week } = req.body;
@@ -94,7 +94,7 @@ router.get('/scrape/:source', async (req, res) => {
  * @summary DELETE a specific event
  * @tags Events
  * @param {string} id.path - Event id
- * @return {Event} 200
+ * @return {Event} 200 - Success Response
  */
 router.post('/:id/delete', async (req, res) => {
     // Check on admin user or actual user id
@@ -114,8 +114,8 @@ router.post('/:id/delete', async (req, res) => {
  * @summary UPDATE a specific event
  * @tags Events
  * @param {string} id.path - Event id
- * @param {Event} request.body.required - Event info
- * @return {Event} 200
+ * @param {EventArgs} request.body.required - Event info
+ * @return {Event} 200 - Success Response
  */
 router.post('/:id/update', async (req, res) => {
     const existingEvent = await Event.findOne({ id: req.params.id });
