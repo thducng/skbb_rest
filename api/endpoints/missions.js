@@ -2,6 +2,7 @@ const express = require('express');
 const router = express();
 
 const Mission = require('../models/mission.model');
+const Foundation = require('../models/foundation.model');
 
 /**
  * GET /api/missions
@@ -30,6 +31,24 @@ router.get('/:id', async (req, res) => {
     return res.json(result);
 });
 
+/**
+ * GET /api/missions/{id}/foundations
+ * @summary GET all required foundations from a specific mission
+ * @tags Missions
+ * @tags Foundations
+ * @param {string} id.path - Mission id
+ * @return {array<Foundation>} 200 - Success Response
+ */
+
+ router.get('/:id/foundations', async (req, res) => {
+    const result = await Mission.findOne({ id: req.params.id }).lean();
+    if(!result) {
+        return res.json({ error: { message: "Mission doesn't exists", body: req.params }});
+    }
+
+    const foundations = await Foundation.find({ id: { $in: result.requiredFoundations }}).lean();
+    return res.json(foundations);
+});
 
 /**
  * POST /api/missions

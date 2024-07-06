@@ -35,8 +35,11 @@ async function getProfile(id) {
         return null;
     }
 
-    const { foundations = [], missions = [] } = await Progression.findOne({ profileId: profile.id }).lean() || {};
+    const progression = await Progression.findOne({ profileId: profile.id }).lean();
     const feedbacks = await Feedback.find({ profileId: profile.id }).lean();
+
+    const foundations = await Foundation.find({ id: { $in: progression?.foundations || [] } }).lean();
+    const missions = await Mission.find({ id: { $in: progression?.missions || [] } }).lean();
 
     return {
         ...profile,
