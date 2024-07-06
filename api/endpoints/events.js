@@ -13,14 +13,49 @@ const validStatus = [
     'REJECTED',
 ]
 
+/**
+ * GET /api/events
+ * @summary Get all events
+ */
 router.get('/', async (req, res) => {
     return res.json(await Event.find().lean());
 });
 
+/**
+ * GET /api/events/{id}
+ * @summary Get specific event
+ * @param {string} id.path
+ */
 router.get('/:id', async (req, res) => {
     return res.json(await Event.findOne({ id: req.params.id }).lean());
 });
 
+/**
+ * An Event
+ * @typedef {object} Event
+ * @property {string} date.required - The date for the event
+ * @property {string} event.required - The event name
+ * @property {string} url - The main url for the event
+ * @property {string} venue - The venue name
+ * @property {string} country - The country of the event
+ * @property {string} image - The image of the event
+ * @property {string} period - The period of the event (from date to date)
+ * @property {string} source - The name of the source (spkz, another website etc.)
+ * @property {string} facebook - A facebook url for the event
+ * @property {string} instagram - An instagram url for the event
+ * @property {string} googlemaps - A google maps url of the location
+ * @property {string} zip - The zipcode of the event
+ * @property {string} city - The city of the event
+ * @property {string} tags - Any tags for the event
+ * @property {string} address - The address of the event
+ * @property {string} week - The starting week of the event
+ */
+
+/**
+ * POST /api/events
+ * @param {Event} request.body.required - Event info
+ * @return {object} 200 - song response
+ */
 router.post('/', async (req, res) => {
     const { date, event, url, venue, country, image, period, source, facebook, instagram, googlemaps, zip, city, tags, address, week } = req.body;
     
@@ -69,6 +104,12 @@ router.get('/scrape/:source', async (req, res) => {
     return res.json(await scrape(req.params.source));
 });
 
+/**
+ * POST /api/events/{id}/delete
+ * @summary delete a specific event
+ * @param {string} id.path
+ * @return {object} 200 - song response
+ */
 router.post('/:id/delete', async (req, res) => {
     // Check on admin user or actual user id
     const existingEvent = await Event.findOne({ id: req.params.id });
@@ -82,7 +123,12 @@ router.post('/:id/delete', async (req, res) => {
     return res.json(newEvent.toObject());
 });
 
-
+/**
+ * POST /api/events/{id}/update
+ * @summary update a specific event
+ * @param {string} id.path
+ * @return {object} 200 - song response
+ */
 router.post('/:id/update', async (req, res) => {
     const existingEvent = await Event.findOne({ id: req.params.id });
 

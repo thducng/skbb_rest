@@ -4,11 +4,20 @@ const router = express();
 const Course = require('../models/course.model');
 const CourseHistory = require('../models/courseHistory.model');
 
+/**
+ * GET /api/courses
+ * @summary Get all courses
+ */
 router.get('/', async (req, res) => {
     const courses = await Course.find({}).lean();
     return res.json(courses);
 });
 
+/**
+ * GET /api/courses/{id}
+ * @summary Get specific course
+ * @param {string} id.path
+ */
 router.get('/:id', async (req, res) => {
     const course = await Course.findOne({ id: req.params.id }).lean();
 

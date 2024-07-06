@@ -13,7 +13,10 @@ const levels = require('./endpoints/levels');
 const events = require('./endpoints/events');
 const videos = require('./endpoints/videos');
 
-
+/**
+ * GET /api
+ * @summary This is the main API endpoint
+ */
 router.get('/', (req, res) => {
     res.status(200).send({ message: 'Welcome to Specifik Kidz Breakverse REST-API'});
 });
