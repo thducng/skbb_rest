@@ -14,25 +14,18 @@ const corsOpts = {
 const options = {
     info: {
       version: '1.0.0',
-      title: 'Albums store',
+      title: 'Specifik Kidz Breakverse',
       license: {
         name: 'MIT',
       },
     },
-    filesPattern: './example.js',
-    baseDir: __dirname,
-    security: {
-      BasicAuth: {
-        type: 'http',
-        scheme: 'basic',
-      },
-    },
+    filesPattern: './index.js',
+    baseDir: __dirname
   };
 expressJSDocSwagger(app)(options);
 
 app.use(cors(corsOpts));
 app.use(express.json());
-
 
 app.use('/api', api);
 app.use('/images', express.static('images'));
