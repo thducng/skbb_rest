@@ -138,7 +138,6 @@ router.post('/:id/update', async (req, res) => {
         existingEvent.status = req.body.status || existingEvent.status;
     }
     
-    existingEvent.checksum = md5(JSON.stringify(existingEvent.toObject()));
     await existingEvent.save();
 
     return res.json(await Event.findOne({ id: req.params.id }).lean());
