@@ -70,6 +70,11 @@ router.post('/', async (req, res) => {
  */
 router.post('/:id', async (req, res) => {
     const { profileId, message, from, attachments = [] } = req.body;
+    const result = await Feedback.findOne({ id: req.params.id }).lean();
+
+    if(!result) {
+        return res.json({ error: { message: "Feedback doesn't exists", body: req.body }});
+    }
     if(!profileId || !message || !from) {
         return res.json({ 
             error: { message: "Missing values", 
@@ -81,7 +86,7 @@ router.post('/:id', async (req, res) => {
         }});
     }
 
-    await Feedback.updateOne({ id: req.params.id }, {
+    await Feedback.updateOne({ id: result.id }, {
         message,
         from,
         attachments
