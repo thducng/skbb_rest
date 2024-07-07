@@ -99,9 +99,9 @@ router.post('/', async (req, res) => {
  */
 router.post('/:id', async (req, res) => {
     const { name, category, level, exp, criteria = [], youtubeUrl, thumbnailUrl } = req.body;
-    const foundation = await Foundation.findOne({ name, category }).lean();
+    const result = await Foundation.findOne({ name, category }).lean();
 
-    if(!foundation) {
+    if(!result) {
         return res.json({ error: { message: "Foundation doesn't exists", body: req.body }});
     }
     if(!name || !category || !exp) {
