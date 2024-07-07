@@ -4,7 +4,6 @@ const md5 = require('md5');
 const { v4 } = require('uuid');
 const scrape = require('../scraper');
 const Event = require('../models/event.model');
-const { v4 } = require('uuid');
 const { sanitizeValue } = require('../lib/sanitizeValue');
 
 const validStatus = [
