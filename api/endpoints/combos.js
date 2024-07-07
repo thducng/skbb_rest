@@ -80,7 +80,7 @@ router.post('/', async (req, res) => {
  */
 router.post('/:id', async (req, res) => {
     const { name, category, level, exp, foundations = [], youtubeUrl, thumbnailUrl } = req.body;
-    const result = await Combo.findOne({ name, category }).lean();
+    const result = await Combo.findOne({ id: req.params.id }).lean();
 
     if(!result) {
         return res.json({ error: { message: "Combo doesn't exists", body: req.body }});

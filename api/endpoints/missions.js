@@ -100,7 +100,7 @@ router.post('/', async (req, res) => {
  */
 router.post('/:id', async (req, res) => {
     const { name, category, description, requiredFoundations = [], requiredMinimumPosition, exp, items = [], badge } = req.body;
-    const result = await Mission.findOne({ name, category }).lean();
+    const result = await Mission.findOne({ id: req.params.id }).lean();
 
     if(!result) {
         return res.json({ error: { message: "Mission doesn't exists", body: req.body }});
