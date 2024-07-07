@@ -70,6 +70,7 @@ const schema = new Schema({
     city: String,
     tags: [String],
     week: Number,
+    deletedAt: Date
 }, { timestamps: true });
 
 const Model = mongoose.model('event', schema);
