@@ -68,7 +68,7 @@ router.get('/:id', async (req, res) => {
  * @tags Files
  * @param {string} id.path - File id
  * @param {DeleteFileArgs} request.body.required - Authority Arguments
- * @return {File} 200 - Success Response
+ * @return {boolean} 200 - Success Response
  */
  router.post('/:id', async (req, res) => {
     let { id } = req.params
