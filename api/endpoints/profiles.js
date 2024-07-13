@@ -229,12 +229,18 @@ router.post('/:id/update', async (req, res) => {
 });
 
 /**
+ * A Complete Argument
+ * @typedef {object} CompleteArgs
+ * @property {string} type.required - Type of progression ("foundation", "mission", etc.)
+ * @property {string} id.required - The id of the progression ("foundation id", "mission id", etc.)
+ */
+
+/**
  * POST /api/profiles/{id}/complete
  * @summary COMPLETE a progression for the profile
  * @tags Profiles
  * @param {string} id.path - Profile id
- * @param {string} request.body.type.required - Type of progression ("foundation", "mission", etc.)
- * @param {string} request.body.id.required - The id of the progression ("foundation id", "mission id", etc.)
+ * @param {CompleteArgs} request.body.required - Complete info
  * @return {Profile} 200 - Success Response
  */
 router.post('/:id/complete', async (req, res) => {
