@@ -55,4 +55,10 @@ async function addItems(profile, newItems) {
     return await Profile.findOne({ id: profile.id }).lean();
 }
 
-module.exports = { addExp, addItems };
+async function removeItems(profile, newItems) {
+    const items = profile.items || [];
+    await Profile.updateOne({ id: profile.id }, { items: items.filter((item) => !newItems.includes(item)) });
+    return await Profile.findOne({ id: profile.id }).lean();
+}
+
+module.exports = { addExp, addItems, removeItems };

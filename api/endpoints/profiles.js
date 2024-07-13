@@ -1,5 +1,5 @@
 const express = require('express');
-const { addExp, addItems } = require('../lib/level');
+const { addExp, addItems, removeItems } = require('../lib/level');
 const { sanitizeValue } = require('../lib/sanitizeValue');
 const router = express();
 
@@ -290,6 +290,70 @@ router.post('/:id/complete', async (req, res) => {
 
             await Progression.updateOne({ profileId: profile.id }, { $push: { combos: id }});
             await addExp(profile, combo.exp);
+            break;
+        default: 
+            return res.json({ error: { message: "Invalid complete type", body: req.params }});
+    }
+
+    const newValue = await Profile.findOne({ id }).lean();
+    return res.json(newValue);
+});
+
+/**
+ * POST /api/profiles/{id}/uncomplete
+ * @summary DELETE a progression from the profile
+ * @tags Profiles
+ * @param {string} id.path - Profile id
+ * @param {CompleteArgs} request.body.required - Complete info
+ * @return {Profile} 200 - Success Response
+ */
+ router.post('/:id/uncomplete', async (req, res) => {
+    const { type, id } = req.body;
+    const profile = await Profile.findOne({ id: req.params.id });
+
+    if(!profile) {
+        return res.json({ error: { message: "Profile doesn't exists", body: req.params }});
+    }
+
+    const exists = await Progression.findOne({ profileId: profile.id }).lean();
+    if(!exists) {
+        await new Progression({
+            profileId: profile.id,
+            userId: profile.userId,
+            foundations: [],
+            missions: [],
+            combos: []
+        }).save();
+    }
+
+    switch(type) {
+        case "foundation": 
+            const foundation = await Foundation.findOne({ id }).lean();
+            if(!foundation) {
+                return res.json({ error: { message: "Invalid foundation id", body: req.params }});
+            }
+
+            await Progression.updateOne({ profileId: profile.id }, { $pull: { foundations: id }});
+            await addExp(profile, -foundation.exp);
+            break;
+        case "mission":
+            const mission = await Mission.findOne({ id }).lean();
+            if(!mission) {
+                return res.json({ error: { message: "Invalid mission id", body: req.params }});
+            }
+
+            await Progression.updateOne({ profileId: profile.id }, { $pull: { missions: id }});
+            await addExp(profile, -mission.exp);
+            await removeItems(profile, mission.items);
+            break;
+        case "combo":
+            const combo = await Combo.findOne({ id }).lean();
+            if(!mission) {
+                return res.json({ error: { message: "Invalid combo id", body: req.params }});
+            }
+
+            await Progression.updateOne({ profileId: profile.id }, { $pull: { combos: id }});
+            await addExp(profile, -combo.exp);
             break;
         default: 
             return res.json({ error: { message: "Invalid complete type", body: req.params }});
