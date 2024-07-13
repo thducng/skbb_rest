@@ -2,13 +2,22 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 /**
- * A File Argument
- * @typedef {object} FileArgs
+ * A Create File Argument
+ * @typedef {object} CreateFileArgs
  * @property {string} profileId.required - The profile id of the file owner
  * @property {string} name - A custom name
  * @property {string} description - File description
  * @property {array<string>} tags - Any tags for the file
  */
+
+/**
+ * A File Argument
+ * @typedef {object} FileArgs
+ * @property {string} name - A custom name
+ * @property {string} description - File description
+ * @property {array<string>} tags - Any tags for the file
+ */
+
 
 /**
  * A File
