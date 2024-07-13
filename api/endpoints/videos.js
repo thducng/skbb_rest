@@ -55,6 +55,46 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
+ * A DeleteFile Argument
+ * @typedef {object} DeleteFileArgs
+ * @property {string} id - The profile id that owns the file or profile id of an Admin
+ */
+
+/**
+ * POST /api/videos/{id}/delete
+ * @summary DELETE a specific file from a profile
+ * @tags Videos
+ * @tags Profiles
+ * @tags Files
+ * @param {string} id.path - File id
+ * @param {DeleteFileArgs} request.body.required - Authority Arguments
+ * @return {File} 200 - Success Response
+ */
+ router.post('/:id', async (req, res) => {
+    let { id } = req.params
+
+    const file = await File.findOne({ id }).lean();
+    if(!file) {
+        return res.status(400).json({ error: 'Invalid file id' });
+    }
+
+    const isProfile = file.profileId === req.body.id;
+    
+    if(isProfile) {
+        await File.deleteOne({ id, profileId: req.body.id });
+        return res.send(true);
+    }
+
+    const isAdmin = await Profile.findOne({ id: req.body.id, type: 'ADMIN' }).lean()
+    if(isAdmin) {
+        await File.deleteOne({ id, profileId: req.body.id });
+        return res.send(true);
+    } else {
+        return res.status(400).json({ error: 'No authority' });
+    }
+});
+
+/**
  * File Arguments
  * @typedef {object} FileArgs
  * @property {string} profileId.required - The date for the course start
