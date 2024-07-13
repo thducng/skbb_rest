@@ -33,7 +33,7 @@ function calcLevel(exp) {
 }
 
 async function addExp(profile, exp) {
-    const experience = profile.exp + exp;
+    const experience = profile.exp || 0 + exp;
 
     const newLevel = calcLevel(experience);
     if(newLevel === 20) {
