@@ -70,7 +70,7 @@ router.get('/:id', async (req, res) => {
  * @param {DeleteFileArgs} request.body.required - Authority Arguments
  * @return {boolean} 200 - Success Response
  */
- router.post('/:id', async (req, res) => {
+ router.post('/:id/delete', async (req, res) => {
     let { id } = req.params
 
     const file = await File.findOne({ id }).lean();
