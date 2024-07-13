@@ -95,12 +95,6 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
- * File Arguments
- * @typedef {object} FileArgs
- * @property {string} profileId.required - The date for the course start
- */
-
-/**
  * POST /api/videos/upload
  * @summary ADD a file to a profile
  * @tags Profiles
@@ -146,7 +140,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
                 filename: file.originalname,
                 contentType: mimetype,
                 length: buffer.length,
-                profileId: body.profileId
+                profileId: body.profileId,
+                name: body.name,
+                description: body.description,
+                tags: body.tags || []
             });
             newFile.id = uploadStream.id
             let savedFile =  await newFile.save()
