@@ -55,27 +55,6 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
- * POST /api/videos/{id}
- * @summary UPDATE a specific file
- * @tags Videos
- * @tags Files
- * @param {string} id.path - File id
- * @param {FileArgs} request.body.required - File info
- * @return {File} 200 - Success Response
- */
- router.post('/:id', async (req, res) => {
-    let { id } = req.params
-
-    const file = await File.findOne({ id }).lean();
-    if(!file) {
-        return res.status(400).json({ error: 'Invalid file id' });
-    }
-
-    await File.updateOne({ id }, { name: req.body.name, description: req.body.description, tags: req.body.tags || [] });
-    return await File.findOne({ id }).lean();
-});
-
-/**
  * A DeleteFile Argument
  * @typedef {object} DeleteFileArgs
  * @property {string} id - The profile id that owns the file or profile id of an Admin
@@ -179,6 +158,27 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         console.log(err);
         return res.status(400).json({ message: 'Error uploading file', error: err });
     }
+});
+
+/**
+ * POST /api/videos/{id}
+ * @summary UPDATE a specific file
+ * @tags Videos
+ * @tags Files
+ * @param {string} id.path - File id
+ * @param {FileArgs} request.body.required - File info
+ * @return {File} 200 - Success Response
+ */
+ router.post('/:id', async (req, res) => {
+    let { id } = req.params
+
+    const file = await File.findOne({ id }).lean();
+    if(!file) {
+        return res.status(400).json({ error: 'Invalid file id' });
+    }
+
+    await File.updateOne({ id }, { name: req.body.name, description: req.body.description, tags: req.body.tags || [] });
+    return await File.findOne({ id }).lean();
 });
 
 module.exports = router;
