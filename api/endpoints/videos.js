@@ -123,7 +123,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         const exists = await File.findOne({ filename: file.originalname, profileId: body.profileId }).lean();
 
         if(exists) {
-            bucket.delete(new mongoose.Types.ObjectId(exists.id));
+            await bucket.delete(new mongoose.Types.ObjectId(exists.id));
         }
 
         let { originalname, mimetype, buffer } = file
