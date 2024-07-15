@@ -135,6 +135,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             .on("error" , reject("error occured while creating stream") )
         })
 
+        if(!uploadStream.id) {
+            return res.status(404).send("error occured while uploading our work")
+        }
+
         if(!exists) {
             let newFile = new File({
                 filename: file.originalname,
