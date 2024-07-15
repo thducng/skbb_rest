@@ -49,9 +49,13 @@ router.get('/:id', async (req, res) => {
         return res.status(400).json({ error: 'Invalid file id' });
     }
 
-    res.header('Content-Disposition', 'attachment; filename=' + file.filename);
-    let downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(id))
-    downloadStream.pipe(res);
+    try{
+        res.header('Content-Disposition', 'attachment; filename=' + file.filename);
+        let downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(id))
+        downloadStream.pipe(res);
+    }catch(err) {
+        return res.send(err);
+    }
 });
 
 /**
