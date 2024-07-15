@@ -158,6 +158,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             if(!savedFile){
                 return res.status(404).send("error occured while saving our work")
             }
+            return res.send({ message: "file updated successfully"})
         } else {
             await File.updateOne({ filename: file.originalname, profileId: body.profileId }, { id: uploadStream.id });
         }
