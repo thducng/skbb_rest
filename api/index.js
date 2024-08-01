@@ -19,7 +19,7 @@ const videos = require('./endpoints/videos');
  * @summary This is the main API endpoint
  */
 router.get('/', (req, res) => {
-    res.status(200).send({ message: 'Welcome to Specifik Kidz Breakverse REST-API v3'});
+    res.status(200).send({ message: 'Welcome to Specifik Kidz Breakverse REST-API v4'});
 });
 router.use('/profiles', profiles);
 router.use('/users', users);
