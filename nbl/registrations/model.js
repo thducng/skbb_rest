@@ -10,6 +10,8 @@ const Schema = mongoose.Schema;
  * @property {string} country - The country of the register
  * @property {string} crew - The crew of register
  * @property {Array<string>} battles - The battles that is registered to
+ * @property {string} invited - The crew is invited
+ * @property {string} image - Optional image url or id?
  * @property {string} deletedAt - The date on which this register is deleted
  */
 
@@ -20,6 +22,8 @@ const Schema = mongoose.Schema;
  * @property {string} name.required - The name of the register
  * @property {string} country.required - The country of the register
  * @property {Array<string>} battles.required - The battles that is registered to
+ * @property {string} invited - The crew is invited
+ * @property {string} image - Optional image url or id?
  * @property {string} crew - The crew of register
  */
 
@@ -39,6 +43,8 @@ const schema = new Schema({
     crew: String,
     battles: [String],
     status: String,
+    invited: Boolean,
+    image: String,
     deletedAt: Date
 }, { timestamps: true });
 

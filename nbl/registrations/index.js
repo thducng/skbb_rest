@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
  * @return {NblRegistration} 200 - Success Response
  */
 router.post('/', async (req, res) => {
-    const { name, email, country, battles, crew } = req.body;
+    const { name, email, country, battles, image, invited = false, crew } = req.body;
     
     if(!name || !email || !country) {
         return res.json({ 
@@ -57,6 +57,8 @@ router.post('/', async (req, res) => {
         country, 
         crew,
         battles,
+        image,
+        invited,
         status: 'PENDING'
     }
 
@@ -79,7 +81,7 @@ router.post('/', async (req, res) => {
         return res.json({ error: { message: "Registration doesn't exists", body: req.params }});
     }
 
-    const keys = ["name", "email", "country", "crew", "status", "battles"];
+    const keys = ["name", "email", "country", "crew", "status", "battles", "invited", "image"];
 
     for (let idx = 0; idx < keys.length; idx++) {
         const key = keys[idx];
