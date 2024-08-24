@@ -2,6 +2,7 @@ const PORT = process.env.PORT || 8080;
 const express = require('express');
 const expressJSDocSwagger = require('express-jsdoc-swagger');
 const api = require('./api');
+const nbl = require('./nbl');
 const server = express();
 const cors = require('cors');
 
@@ -28,6 +29,7 @@ server.use(cors(corsOpts));
 server.use(express.json());
 
 server.use('/api', api);
+server.use('/nbl', nbl);
 server.use('/images', express.static('images'));
 
 module.exports = server;
