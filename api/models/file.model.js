@@ -34,8 +34,7 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     id: String,
     profileId: {
-        type: String,
-        required: true
+        type: String
     },
     filename: {
         type: String,
