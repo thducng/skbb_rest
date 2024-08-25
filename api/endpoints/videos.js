@@ -114,10 +114,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             return res.status(400).json({ error: 'No file provided in the request' });
         }
 
-        const profile = await Profile.findOne({ id: req.body.profileId }).lean();
-        if (!profile) {
-            return res.status(400).json({ error: 'Profile does not exists' });
-        }
+        // const profile = await Profile.findOne({ id: req.body.profileId }).lean();
+        // if (!profile) {
+        //     return res.status(400).json({ error: 'Profile does not exists' });
+        // }
         
         let { file, body } =  req
         const exists = await File.findOne({ filename: file.originalname, profileId: body.profileId }).lean();
@@ -158,11 +158,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             if(!savedFile){
                 return res.status(404).send("error occured while saving our work")
             }
-            return res.send({ message: "file updated successfully"})
+            return res.send({ id: savedFile.id });
         } else {
             await File.updateOne({ filename: file.originalname, profileId: body.profileId }, { id: uploadStream.id });
         }
-        return res.send({ message: "file uploaded successfully"})
+        return res.send({ id: uploadStream.id });
     } catch (err) {
         console.log(err);
         return res.status(400).json({ message: 'Error uploading file', error: err });
