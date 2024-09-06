@@ -50,6 +50,13 @@ router.post('/', async (req, res) => {
         }});
     }
 
+    const exists = await new NblRegistration.findOne({ email }).lean();
+
+    if(exists) {
+        return res.json({ error: { message: "Email already registered", body: req.params }});
+    }
+
+
     const registration = {
         id: v4(),
         name,
